@@ -1,96 +1,146 @@
-# {{PROJECT_NAME}}
+# Migración de la Plataforma Analítica SAP ERP hacia AWS
 
 Proyecto integrador del módulo Cloud Computing (ITBA).
 
 > **Integrantes:** _completar con los miembros del grupo_
 
-Arquitectura base: VPC + IAM + S3 + Cómputo + Base de datos, todo en LocalStack/Docker (local-first), con AWS real como referencia.
+El proyecto migra la capa analítica de un SAP ERP on-premise hacia AWS. La
+extracción se realiza desde el ERP mediante SAP SLT; SAP BW no forma parte del
+flujo de origen.
 
----
+La solución combina VPC, IAM, S3, EC2 y Amazon RDS PostgreSQL. La demostración
+es local-first: LocalStack emula los servicios AWS y un contenedor PostgreSQL
+representa RDS. La documentación conserva AWS real como arquitectura objetivo.
+
+## Alcance
+
+- Origen: SAP ERP on-premise, tabla CO-PA con aproximadamente 45 millones de registros.
+- Replicación: SAP SLT, representado localmente por un proceso controlado.
+- Ingesta: bucket S3 Landing.
+- Transformación: proceso ETL con identidad IAM de mínimo privilegio.
+- Ingesta productiva: Amazon AppFlow consume el OData publicado sobre SLT/ODP.
+- Cómputo productivo: workers EC2 administrados mediante Auto Scaling.
+- Datos refinados: bucket S3 Curated.
+- Consumo: Amazon RDS PostgreSQL con modelo dimensional.
+- Conectividad: VPN Site-to-Site en la primera fase; Direct Connect como evolución.
+- Acceso: usuarios corporativos por red privada y Power BI Service mediante gateway y TLS.
+
+```text
+SAP ERP -> SAP SLT -> ODP/OData -> VPN / Direct Connect
+    -> AppFlow -> S3 Landing -> EC2 Auto Scaling ETL -> S3 Curated
+    -> RDS PostgreSQL -> BI / usuarios
+```
+
+RDS permanece en subred privada y no se expone públicamente.
+
+## Estado actual
+
+La implementación incluye la arquitectura, el entorno local, la infraestructura
+Terraform base y una demostración reproducible de carga inicial e incremental.
 
 ## Cómo arrancar
 
-### Opción A — GitHub "Use this template" (recomendado)
+### Requisitos
 
-1. Click en **"Use this template"** arriba a la derecha de este repo
-2. Elegí nombre y dueño del repo nuevo (puede ser una organización del grupo)
-3. Cloná el repo nuevo a tu máquina o abrilo en Codespaces
-4. Corré `bin/init.sh "Tu Proyecto"` para personalizar README y docs
-5. Listo: arrancá agregando servicios al `compose.yaml`
+- Docker con Docker Compose
+- Terraform 1.5 o superior
+- Python 3.11 o superior
 
-### Opción B — Cookiecutter / script local
-
-Si preferís hacerlo desde la CLI sin pasar por la UI de GitHub:
+### Entorno local
 
 ```bash
-# Cloná el starter
-git clone https://github.com/<owner>/proyecto-final-starter.git mi-proyecto
-cd mi-proyecto
-
-# Borrá la historia del template
-rm -rf .git
-
-# Personalizá
-./bin/init.sh "Mi Proyecto"
-
-# Arrancá un repo nuevo
-git init && git add . && git commit -m "init: proyecto final desde starter"
-
-# (opcional) creá el repo en GitHub
-gh repo create mi-proyecto --source=. --private --push
+cp .env.example .env
+docker compose up -d
+docker compose ps
 ```
 
----
+- LocalStack: `http://localhost:4566`
+- PostgreSQL: `localhost:5432`
 
-## Qué incluye el starter
+### Demostración end-to-end
 
-Solo estructura — sin servicios pre-armados. Vos elegís qué levantar y dónde.
-
+```bash
+python3 -m pip install -r requirements.txt
+./scripts/run_demo.sh
+./scripts/check.sh
 ```
+
+La demostración genera un CSV sintético inicial y otro incremental, simula SAP
+SLT, publica ambos en S3 Landing, transforma los registros hacia S3 Curated y
+los carga de forma idempotente en PostgreSQL.
+
+Los datos no provienen de un sistema productivo. Los nombres de compañías,
+clientes, materiales, documentos e importes son completamente ficticios.
+
+### Infraestructura Terraform
+
+```bash
+cd iac
+terraform init
+terraform validate
+terraform plan
+terraform apply
+```
+
+AppFlow y EC2 Auto Scaling se mantienen desactivados en el entorno local. Para
+una planificación productiva se habilitan mediante variables:
+
+```bash
+terraform plan \
+  -var='use_localstack=false' \
+  -var='create_appflow=true' \
+  -var='appflow_connector_profile_name=<perfil-sap-odata>' \
+  -var='appflow_sap_object_path=<entity-set-copa>' \
+  -var='create_compute=true' \
+  -var='ec2_ami_id=<ami-aprobada>'
+```
+
+El Connector Profile no se crea en este módulo para evitar guardar la
+contraseña SAP dentro del estado Terraform.
+
+## Estructura
+
+```text
 .
-├── .devcontainer/         # Codespaces listo: postgres-client, aws-cli, docker-in-docker
-├── compose.yaml           # Esqueleto vacío (services: {})
+├── compose.yaml             # LocalStack + PostgreSQL
 ├── docs/
-│   ├── architecture.md    # Plantilla con tablas vacías
-│   └── decisions.md       # Formato ADR
+│   ├── architecture.md      # Arquitectura y conectividad
+│   └── decisions.md         # Decisiones de arquitectura
 ├── iam/
-│   ├── trust_policy.json  # Único molde reutilizable (EC2 assume role)
-│   └── README.md
-├── scripts/
-│   └── README.md          # Guía de convenciones (idempotencia, no secretos)
-├── iac/
-│   ├── main.tf            # Donde van tus recursos
-│   ├── variables.tf       # project_name, environment, region
-│   ├── outputs.tf
-│   └── providers/
-│       ├── aws-local.tf.example     # AWS contra LocalStack
-│       ├── azure-local.tf.example   # Azure contra Azurite
-│       └── gcp-local.tf.example     # GCP contra emuladores
-├── requirements.txt       # boto3, psycopg2, awscli-local, pytest
-├── bin/init.sh            # Personaliza el starter con tu proyecto
-└── .gitignore
+│   └── trust_policy.json    # EC2 asume el rol de integración
+├── iac/                     # Infraestructura como código
+├── postgres/init/           # Inicialización del Data Warehouse local
+├── scripts/                 # Extracción, ETL y validaciones
+└── tests/                   # Pruebas automatizadas
 ```
 
-Mirar `iac/README.md` para elegir provider local.
+## Checklist de entrega
 
----
-
-## Checklist del proyecto
-
-Al final del módulo, este repo debería tener:
-
-- [ ] `docs/architecture.md` con tu diagrama y componentes
-- [ ] `docs/decisions.md` con al menos 5 decisiones documentadas (ADR)
-- [ ] `iam/` con los JSON de tu solución (trust + policies + bucket policy)
-- [ ] `scripts/` con al menos 3 demos automatizados (idempotentes)
-- [ ] `compose.yaml` con los servicios que tu arquitectura usa
-- [ ] Tests unitarios (`pytest` pasa)
-- [ ] README explicando cómo correrlo end-to-end
-
----
+- [x] Arquitectura y componentes documentados
+- [x] Cinco decisiones de arquitectura
+- [x] Política IAM del proceso ETL
+- [x] Demostraciones automatizadas e idempotentes
+- [x] Servicios locales definidos en `compose.yaml`
+- [x] Pruebas unitarias con `pytest`
+- [x] Ejecución end-to-end documentada y validada
 
 ## Referencias del curso
 
-- Repo de demos por clase: [cloud-foundations-lab](https://github.com/maxflorentin/cloud-foundations-lab)
-- AWS Academy Cloud Architecting (Spanish LATAM): los módulos cubren la teoría
-- `cloud-foundations-lab` tiene labs 04 (IAM), 05 (EC2), 06 (S3), 07 (VPC), 08 (RDS) — usar como referencia
+- [cloud-foundations-lab](https://github.com/diegolagre/cloud-foundations-lab),
+  fuente principal de patrones para Docker Compose, LocalStack, Terraform,
+  carga a almacenamiento de objetos, PostgreSQL, bootstrap y validaciones.
+- AWS Academy Cloud Architecting (Spanish LATAM)
+
+## Política de reutilización
+
+Las implementaciones del proyecto deben partir de los ejemplos funcionales de
+`cloud-foundations-lab` siempre que exista un patrón equivalente. La adaptación
+puede cambiar nombres, datos y alcance para representar SAP ERP, SAP SLT y
+CO-PA, pero debe preservar las convenciones probadas del laboratorio:
+
+- configuración mediante variables de entorno;
+- scripts idempotentes y sin secretos embebidos;
+- clientes `boto3` compatibles con endpoints locales;
+- carga PostgreSQL mediante archivos SQL versionados;
+- bootstrap y controles automáticos reproducibles;
+- Terraform con AWS Provider configurado para LocalStack.

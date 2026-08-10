@@ -1,11 +1,45 @@
-# Servicios del proyecto.
-# Agregá acá los que tu arquitectura necesite.
-# Referencias en los labs del curso (cloud-foundations-lab):
-#   - postgres (lab 02)
-#   - minio (lab 02)
-#   - localstack (lab 04+)
-#   - redis, redpanda (labs siguientes)
+name: sap-analytics-migration
 
-services: {}
+services:
+  localstack:
+    image: localstack/localstack:4.6
+    container_name: sap-analytics-localstack
+    environment:
+      SERVICES: s3,iam,sts,ec2,secretsmanager,cloudwatch
+      AWS_DEFAULT_REGION: ${AWS_REGION:-us-east-1}
+      DEBUG: ${LOCALSTACK_DEBUG:-0}
+      PERSISTENCE: "1"
+    ports:
+      - "${LOCALSTACK_PORT:-4566}:4566"
+    volumes:
+      - localstack_data:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
 
-volumes: {}
+  postgres:
+    image: postgres:16-alpine
+    container_name: sap-analytics-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-analytics}
+      POSTGRES_USER: ${POSTGRES_USER:-analytics_app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local_dev_only}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-analytics_app} -d ${POSTGRES_DB:-analytics}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+volumes:
+  localstack_data:
+  postgres_data:
