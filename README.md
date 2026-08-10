@@ -33,6 +33,13 @@ SAP ERP -> SAP SLT -> ODP/OData -> VPN / Direct Connect
 
 RDS permanece en subred privada y no se expone públicamente.
 
+## Arquitectura cerrada
+
+La arquitectura productiva definitiva y su comparación con la demostración
+local están documentadas en [`docs/architecture.md`](docs/architecture.md). La
+imagen actualizada para la presentación está disponible en
+[`outputs/arquitectura-sap-erp-slt-aws-consumo-v2.png`](outputs/arquitectura-sap-erp-slt-aws-consumo-v2.png).
+
 ## Estado actual
 
 La implementación incluye la arquitectura, el entorno local, la infraestructura

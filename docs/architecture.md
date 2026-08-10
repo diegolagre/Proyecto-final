@@ -34,9 +34,30 @@ flowchart LR
   PBI["Power BI Service<br/>SaaS"] -->|TLS seguro| GW --> RDS
 ```
 
-La imagen de presentación se encuentra en
-`outputs/arquitectura-sap-erp-slt-aws-consumo.png`. El diagrama Mermaid es la
-versión mantenible y debe actualizarse junto con la infraestructura.
+La imagen final de presentación se encuentra en
+[`outputs/arquitectura-sap-erp-slt-aws-consumo-v2.png`](../outputs/arquitectura-sap-erp-slt-aws-consumo-v2.png).
+El diagrama Mermaid es la versión mantenible y debe actualizarse junto con la
+infraestructura.
+
+## Servicios definitivos
+
+| Capa | Servicio | Decisión cerrada |
+|---|---|---|
+| Origen | SAP ECC · CO-PA CE1xxxx | Permanece on-premise; no se utiliza SAP BW |
+| Replicación | SAP SLT · DMIS 2018 | Publica la tabla mediante ODP y delta queue |
+| Exposición | SAP Gateway · OData | EntitySet consumible mediante HTTPS |
+| Conectividad | VPN Site-to-Site | Primera fase; Direct Connect queda como evolución |
+| Ingesta | Amazon AppFlow | Carga inicial e incremental hacia S3 Landing |
+| Almacenamiento | Amazon S3 Landing y Curated | Originales y datos procesados en zonas separadas |
+| Procesamiento | EC2 Auto Scaling | Workers ETL privados, reemplazables y escalables |
+| Base analítica | Amazon RDS PostgreSQL | Data Warehouse privado, sin endpoint público |
+| Seguridad | IAM, KMS y Secrets Manager | Mínimo privilegio, cifrado y secretos administrados |
+| Operación | CloudWatch y backups | Métricas, logs, alarmas y recuperación |
+| Consumo interno | VPN / Direct Connect | Usuarios corporativos desde la red privada |
+| Consumo SaaS | Power BI Gateway + TLS | Sin conexión pública directa hacia RDS |
+
+Quedan fuera del alcance: migración del ERP, SAP BW, Application Load Balancer,
+acceso público a RDS, Airbyte y exposición del SAP Gateway a Internet.
 
 ## Límites de la simulación
 
