@@ -4,6 +4,9 @@ Proyecto integrador del módulo Cloud Computing (ITBA).
 
 > **Integrantes:** _completar con los miembros del grupo_
 
+> **Entrega:** la guía compacta para evaluación y defensa está en
+> [`docs/delivery-guide.md`](docs/delivery-guide.md).
+
 El proyecto migra la capa analítica de un SAP ERP on-premise hacia AWS. La
 extracción se realiza desde el ERP mediante SAP SLT; SAP BW no forma parte del
 flujo de origen.
@@ -129,7 +132,8 @@ contraseña SAP dentro del estado Terraform.
 │   ├── sizing.md            # Volumen, capacidad y escalabilidad
 │   ├── security.md          # Seguridad y monitoreo
 │   ├── migration-plan.md    # Objetivos SMART y cronograma
-│   └── cost-estimate.md     # Estimación mensual AWS
+│   ├── cost-estimate.md     # Estimación mensual AWS
+│   └── delivery-guide.md    # Entrega breve y matriz de evidencias
 ├── iam/
 │   └── trust_policy.json    # EC2 asume el rol de integración
 ├── iac/                     # Infraestructura como código
