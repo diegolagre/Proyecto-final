@@ -8,6 +8,8 @@ Proyecto integrador del módulo Cloud Computing (ITBA).
 > [`docs/delivery-guide.md`](docs/delivery-guide.md).
 > La presentación final está disponible en
 > [`outputs/proyecto-final-sap-analytics-aws.pptx`](outputs/proyecto-final-sap-analytics-aws.pptx).
+> El guion y las preguntas probables están en
+> [`docs/defense-script.md`](docs/defense-script.md).
 
 El proyecto migra la capa analítica de un SAP ERP on-premise hacia AWS. La
 extracción se realiza desde el ERP mediante SAP SLT; SAP BW no forma parte del
@@ -95,6 +97,13 @@ los carga de forma idempotente en PostgreSQL.
 Los datos no provienen de un sistema productivo. Los nombres de compañías,
 clientes, materiales, documentos e importes son completamente ficticios.
 
+Para la exposición se puede ejecutar todo el recorrido, los controles y el
+cálculo de costos con un único comando:
+
+```bash
+./scripts/presentation_demo.sh
+```
+
 ### Infraestructura Terraform
 
 ```bash
@@ -135,7 +144,8 @@ contraseña SAP dentro del estado Terraform.
 │   ├── security.md          # Seguridad y monitoreo
 │   ├── migration-plan.md    # Objetivos SMART y cronograma
 │   ├── cost-estimate.md     # Estimación mensual AWS
-│   └── delivery-guide.md    # Entrega breve y matriz de evidencias
+│   ├── delivery-guide.md    # Entrega breve y matriz de evidencias
+│   └── defense-script.md    # Guion y preguntas de la defensa
 ├── iam/
 │   └── trust_policy.json    # EC2 asume el rol de integración
 ├── iac/                     # Infraestructura como código
