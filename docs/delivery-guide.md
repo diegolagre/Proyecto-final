@@ -4,6 +4,10 @@ Este documento resume el plan en cinco hojas lógicas. Los documentos enlazados
 contienen el detalle técnico y el repositorio conserva toda la implementación
 reproducible.
 
+La versión paginada para entregar se genera con
+`python3 scripts/generate_delivery_pdf.py` y queda en
+`output/pdf/plan-migracion-sap-analytics-aws.pdf`.
+
 ---
 
 ## Hoja 1 — Caso, alcance y resultado esperado
@@ -53,6 +57,11 @@ flowchart LR
 ```
 
 ### Servicios y justificación
+
+El núcleo evaluado contiene exactamente diez servicios AWS: IAM, VPC, S3,
+AppFlow, EC2, EBS, EC2 Auto Scaling, RDS PostgreSQL, Secrets Manager y
+CloudWatch. KMS, Site-to-Site VPN y backups son capacidades transversales del
+diseño y no se contabilizan como servicios adicionales del núcleo evaluado.
 
 | Servicio | Función | Motivo frente a la alternativa |
 |---|---|---|
@@ -130,6 +139,11 @@ La reversa reactiva el consumo anterior y conserva Landing y RDS para diagnósti
 El Gantt completo, el RACI y las evidencias de cierre están en
 [`migration-plan.md`](migration-plan.md).
 
+La adopción también contempla comunicaciones antes y durante el corte,
+capacitación para usuarios y operaciones, titulares y suplentes por función y
+una transferencia formal después del hypercare. El detalle está en
+[`change-management.md`](change-management.md).
+
 ---
 
 ## Hoja 5 — Costos, demostración y evidencia
@@ -174,8 +188,10 @@ esperado del control es `13 OK / 0 WARN` y cinco pruebas aprobadas.
 | Tiempo y Gantt | [`migration-plan.md`](migration-plan.md) |
 | Recursos dimensionados | [`sizing.md`](sizing.md) |
 | Costos reproducibles | [`cost-estimate.md`](cost-estimate.md) y `costs/aws-us-east-1.json` |
+| Pricing Calculator | [`aws-pricing-calculator-evidence.md`](aws-pricing-calculator-evidence.md) |
 | Cuatro o más servicios | `compose.yaml` y `scripts/bootstrap_cloud.py` |
 | Seguridad y elementos no obvios | [`security.md`](security.md) |
+| Cultura, capacitación y procesos | [`change-management.md`](change-management.md) |
 | Código reproducible | `iac/`, `scripts/bootstrap.sh` y `scripts/run_demo.sh` |
 | Validación | `scripts/check.sh` y `tests/` |
 

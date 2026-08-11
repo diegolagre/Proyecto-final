@@ -14,10 +14,12 @@ SAP o de una cuenta AWS real.
 | Tiempo y Gantt | Completo | `docs/migration-plan.md` |
 | Recursos dimensionados | Completo | `docs/sizing.md` y variables Terraform |
 | Costos mensuales | Completo | `docs/cost-estimate.md` y JSON recalculable |
+| AWS Pricing Calculator | Pendiente externo | Falta enlace/exportación auténtica; checklist preparado |
 | Cuatro o más servicios | Completo | Cinco servicios AWS verificados en LocalStack |
 | Código reproducible | Completo | Bootstrap, demo y control con un comando |
 | Seguridad | Completo para diseño | IAM, red privada, KMS, secretos y alarmas |
 | Arquitectura defendible | Completo | Decisiones y alternativas registradas |
+| Cultura y procesos | Completo | Comunicación, capacitación, adopción y transferencia |
 | Presentación | Completo | PowerPoint de ocho diapositivas con fuentes |
 | Datos confidenciales | Protegidos | Sólo se versionan registros sintéticos |
 
@@ -50,10 +52,9 @@ productivo válido.
 
 ## Pendientes del alumno
 
-1. Completar los integrantes en la cabecera de `README.md`.
-2. Confirmar si la región definitiva seguirá siendo `us-east-1`.
-3. Recrear la estimación en AWS Pricing Calculator cerca de la fecha de entrega.
-4. Practicar la defensa con `./scripts/presentation_demo.sh`.
+1. Confirmar si la región definitiva seguirá siendo `us-east-1`.
+2. Recrear la estimación en AWS Pricing Calculator y adjuntar enlace/exportación.
+3. Practicar la defensa con `./scripts/presentation_demo.sh`.
 
 ## Dependencias externas antes de un piloto real
 

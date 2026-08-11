@@ -2,7 +2,7 @@
 
 Proyecto integrador del módulo Cloud Computing (ITBA).
 
-> **Integrantes:** _completar con los miembros del grupo_
+> **Autor:** Diego Lagre — entrega individual.
 
 > **Entrega:** la guía compacta para evaluación y defensa está en
 > [`docs/delivery-guide.md`](docs/delivery-guide.md).
@@ -14,6 +14,13 @@ Proyecto integrador del módulo Cloud Computing (ITBA).
 El proyecto migra la capa analítica de un SAP ERP on-premise hacia AWS. La
 extracción se realiza desde el ERP mediante SAP SLT; SAP BW no forma parte del
 flujo de origen.
+
+Para la evaluación se declaran exactamente diez servicios AWS principales:
+IAM, Amazon VPC, Amazon S3, Amazon AppFlow, Amazon EC2, Amazon EBS, EC2 Auto
+Scaling, Amazon RDS for PostgreSQL, AWS Secrets Manager y Amazon CloudWatch.
+KMS, Site-to-Site VPN y backups se presentan como capacidades transversales de
+seguridad, conectividad y continuidad, no como servicios adicionales del núcleo
+evaluado.
 
 La solución combina VPC, IAM, S3, EC2 y Amazon RDS PostgreSQL. La demostración
 es local-first: LocalStack emula los servicios AWS y un contenedor PostgreSQL
@@ -50,10 +57,14 @@ El escenario base de capacidad, crecimiento y escalabilidad se detalla en
 [`docs/sizing.md`](docs/sizing.md).
 Los controles de identidad, cifrado, secretos y monitoreo se describen en
 [`docs/security.md`](docs/security.md).
+La capacitación, comunicación, adopción y transferencia a operación se detallan
+en [`docs/change-management.md`](docs/change-management.md).
 Los objetivos SMART, el cronograma, el corte y la reversa están definidos en
 [`docs/migration-plan.md`](docs/migration-plan.md).
 La estimación mensual reproducible y sus supuestos se encuentran en
 [`docs/cost-estimate.md`](docs/cost-estimate.md).
+La guía para adjuntar la evidencia oficial de AWS Pricing Calculator está en
+[`docs/aws-pricing-calculator-evidence.md`](docs/aws-pricing-calculator-evidence.md).
 La auditoría final y los pendientes externos están registrados en
 [`docs/readiness-audit.md`](docs/readiness-audit.md).
 
@@ -144,8 +155,10 @@ contraseña SAP dentro del estado Terraform.
 │   ├── decisions.md         # Decisiones de arquitectura
 │   ├── sizing.md            # Volumen, capacidad y escalabilidad
 │   ├── security.md          # Seguridad y monitoreo
+│   ├── change-management.md # Adopción, capacitación y operación
 │   ├── migration-plan.md    # Objetivos SMART y cronograma
 │   ├── cost-estimate.md     # Estimación mensual AWS
+│   ├── aws-pricing-calculator-evidence.md # Evidencia oficial pendiente
 │   ├── delivery-guide.md    # Entrega breve y matriz de evidencias
 │   ├── defense-script.md    # Guion y preguntas de la defensa
 │   └── readiness-audit.md   # Auditoría previa a la entrega
