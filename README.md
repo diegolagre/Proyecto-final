@@ -65,12 +65,15 @@ Terraform base y una demostración reproducible de carga inicial e incremental.
 
 ```bash
 cp .env.example .env
-docker compose up -d
-docker compose ps
+./scripts/bootstrap.sh
 ```
 
 - LocalStack: `http://localhost:4566`
 - PostgreSQL: `localhost:5432`
+
+El bootstrap levanta los contenedores y materializa cinco servicios AWS en
+LocalStack: S3, IAM, VPC/EC2, Secrets Manager y CloudWatch Logs. Es idempotente
+y se puede ejecutar nuevamente sin duplicar recursos.
 
 ### Demostración end-to-end
 
@@ -142,6 +145,7 @@ contraseña SAP dentro del estado Terraform.
 - [x] Política IAM del proceso ETL
 - [x] Demostraciones automatizadas e idempotentes
 - [x] Servicios locales definidos en `compose.yaml`
+- [x] Cinco servicios AWS materializados y verificados en LocalStack
 - [x] Pruebas unitarias con `pytest`
 - [x] Ejecución end-to-end documentada y validada
 - [x] Dimensionamiento y estimación mensual de costos

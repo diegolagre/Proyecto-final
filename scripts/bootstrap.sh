@@ -25,4 +25,11 @@ for attempt in {1..30}; do
   sleep 2
 done
 
+python3 -c 'import boto3' >/dev/null 2>&1 || {
+  echo "ERROR: faltan dependencias Python. Ejecutá: python3 -m pip install -r requirements.txt"
+  exit 1
+}
+
+python3 scripts/bootstrap_cloud.py
+
 echo "Bootstrap completo. Ejecutá: ./scripts/run_demo.sh"

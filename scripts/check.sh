@@ -23,6 +23,9 @@ docker compose ps --services --filter status=running | grep -q localstack \
   && curl -fsS http://localhost:4566/_localstack/health >/dev/null \
   && pass "localstack responde" || warn "localstack no responde"
 
+python3 scripts/bootstrap_cloud.py --check >/dev/null 2>&1 \
+  && pass "5 servicios AWS locales verificados" || warn "faltan recursos AWS locales; ejecutá bootstrap.sh"
+
 python3 -m pytest -q && pass "pytest pasa" || warn "pytest falló"
 
 echo "Resultado: ${OK} OK / ${WARN} WARN"

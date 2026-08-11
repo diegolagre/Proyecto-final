@@ -17,6 +17,12 @@ LANDING_BUCKET = os.getenv(
 CURATED_BUCKET = os.getenv(
     "CURATED_BUCKET", "sap-analytics-migration-dev-curated"
 )
+LOCAL_ROLE_NAME = os.getenv("LOCAL_ROLE_NAME", "sap-analytics-migration-dev-etl-role")
+LOCAL_VPC_NAME = os.getenv("LOCAL_VPC_NAME", "sap-analytics-migration-dev-vpc")
+LOCAL_SECRET_NAME = os.getenv(
+    "LOCAL_SECRET_NAME", "sap-analytics-migration/dev/postgres"
+)
+LOCAL_LOG_GROUP = os.getenv("LOCAL_LOG_GROUP", "/sap-analytics-migration/dev/etl")
 
 POSTGRES_HOST = os.getenv("POSTGRES_HOST", "localhost")
 POSTGRES_PORT = int(os.getenv("POSTGRES_PORT", "5432"))

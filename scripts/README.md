@@ -12,3 +12,14 @@ Referencias en el lab del curso:
 - `scripts/ec2_demo.py` — uso de tags para detectar recursos existentes
 - `scripts/s3_demo.py` — head_object para idempotencia por contenido
 - `scripts/vpc_demo.py` — find-by-tag helper para grafo de recursos
+
+## Línea base AWS local
+
+```bash
+./scripts/bootstrap.sh
+python3 scripts/bootstrap_cloud.py --check
+```
+
+`bootstrap_cloud.py` adapta directamente los patrones idempotentes de IAM y VPC
+del laboratorio. Crea buckets S3, rol y policy IAM, VPC con dos subredes privadas
+y security groups, un secreto local y un grupo de CloudWatch Logs.
