@@ -14,7 +14,7 @@ SAP o de una cuenta AWS real.
 | Tiempo y Gantt | Completo | `docs/migration-plan.md` |
 | Recursos dimensionados | Completo | `docs/sizing.md` y variables Terraform |
 | Costos mensuales | Completo | `docs/cost-estimate.md` y JSON recalculable |
-| AWS Pricing Calculator | Pendiente externo | Falta enlace/exportación auténtica; checklist preparado |
+| AWS Pricing Calculator | Completo | PDF oficial, enlace compartido y conciliación con VPN complementaria |
 | Cuatro o más servicios | Completo | Cinco servicios AWS verificados en LocalStack |
 | Código reproducible | Completo | Bootstrap, demo y control con un comando |
 | Seguridad | Completo para diseño | IAM, red privada, KMS, secretos y alarmas |
@@ -31,7 +31,7 @@ SAP o de una cuenta AWS real.
 - Demo integral: 13 controles aprobados y cero advertencias.
 - Terraform 1.5.7: formato correcto y configuración válida.
 - Presentación: sin overflow y sin diferencias estructurales contra el template.
-- Cálculo reproducible: USD 662,22 mensuales y USD 3,20 de costo técnico inicial.
+- Cálculo reconciliado: USD 700,04 en Calculator y USD 736,54 con VPN complementaria.
 - Búsqueda de credenciales: no se encontraron tokens, access keys ni contraseñas
   productivas versionadas.
 
@@ -53,8 +53,7 @@ productivo válido.
 ## Pendientes del alumno
 
 1. Confirmar si la región definitiva seguirá siendo `us-east-1`.
-2. Recrear la estimación en AWS Pricing Calculator y adjuntar enlace/exportación.
-3. Practicar la defensa con `./scripts/presentation_demo.sh`.
+2. Practicar la defensa con `./scripts/presentation_demo.sh`.
 
 ## Dependencias externas antes de un piloto real
 

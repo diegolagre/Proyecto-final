@@ -1,7 +1,7 @@
 # Estimación de costos AWS
 
 Estimación orientativa para el escenario productivo base en `us-east-1`, con
-precios On-Demand en USD consultados el 10 de agosto de 2026. No constituye una
+precios On-Demand en USD exportados de AWS Pricing Calculator el 11 de agosto de 2026. No constituye una
 cotización: impuestos, soporte empresarial, variaciones de consumo y cambios de
 precio deben verificarse en AWS Pricing Calculator antes de aprobar el proyecto.
 
@@ -10,17 +10,18 @@ precio deben verificarse en AWS Pricing Calculator antes de aprobar el proyecto.
 | Categoría | Costo mensual |
 |---|---:|
 | BI connectivity | USD 282,48 |
-| Database | USD 257,99 |
-| Compute | USD 72,48 |
-| Network | USD 38,30 |
-| Monitoring | USD 3,25 |
+| Database | USD 298,14 |
+| Compute | USD 108,48 |
+| Network | USD 36,50 |
+| Monitoring | USD 3,12 |
 | Storage | USD 4,69 |
-| Security | USD 2,26 |
+| Security | USD 2,36 |
 | Ingestion | USD 0,77 |
-| **Total mensual estimado** | **USD 662,22** |
-| **Total anual sin descuentos** | **USD 7.946,64** |
+| **Subtotal AWS Pricing Calculator** | **USD 700,04** |
+| **Total mensual con VPN complementaria** | **USD 736,54** |
+| **Total anual recurrente** | **USD 8.838,48** |
 
-El 81,6 % del total corresponde al clúster de Power BI Gateway y a RDS
+El 78,8 % del total corresponde al clúster de Power BI Gateway y a RDS
 Multi-AZ. Separarlos permite discutir disponibilidad y ubicación del gateway
 sin distorsionar el costo del data lake o de AppFlow.
 
@@ -33,7 +34,8 @@ sin distorsionar el costo del data lake o de AppFlow.
 - 30 GB adicionales de backups RDS por encima de la franquicia aplicable.
 - 200 GB S3 Standard, incluyendo Landing, Curated, versiones y temporales.
 - AppFlow ejecutado cada hora y 2 GB mensuales de deltas.
-- Una conexión Site-to-Site VPN y 20 GB de transferencia saliente.
+- Una conexión Site-to-Site VPN. Los 20 GB de transferencia saliente se mantienen
+  documentados, sin cargo mientras resulten cubiertos por la franquicia agregada vigente.
 - Una clave KMS, tres secretos, seis alarmas y 5 GB de logs.
 
 El archivo [`costs/aws-us-east-1.json`](../costs/aws-us-east-1.json) contiene
@@ -47,19 +49,16 @@ python3 scripts/calculate_monthly_cost.py
 
 | Componente | Cálculo | Mensual |
 |---|---:|---:|
-| EC2 ETL | 730 h × USD 0,096 | USD 70,08 |
-| EBS ETL | 30 GB × USD 0,08 | USD 2,40 |
+| EC2 ETL y EBS | Configuración oficial m6i.large Linux + 30 GB gp3 | USD 108,48 |
 | 2 EC2 Windows para gateway | 1.460 h × USD 0,188 | USD 274,48 |
 | EBS gateways | 100 GB × USD 0,08 | USD 8,00 |
-| RDS PostgreSQL Multi-AZ | 730 h × USD 0,318 | USD 232,14 |
-| RDS gp3 Multi-AZ | 100 GB × USD 0,23 | USD 23,00 |
-| Backup RDS adicional | 30 GB × USD 0,095 | USD 2,85 |
+| RDS PostgreSQL Multi-AZ | db.m6g.large + 100 GB gp3 + 30 GB backup | USD 298,14 |
 | S3 y solicitudes | almacenamiento + PUT/GET | USD 4,69 |
 | AppFlow | 730 ejecuciones + 2 GB | USD 0,77 |
 | VPN | 730 h × USD 0,05 | USD 36,50 |
-| Transferencia saliente | 20 GB × USD 0,09 | USD 1,80 |
-| KMS y Secrets Manager | clave, solicitudes y 3 secretos | USD 2,26 |
-| CloudWatch | 6 alarmas + 5 GB de logs | USD 3,25 |
+| Transferencia saliente | 20 GB bajo franquicia agregada vigente | USD 0,00 |
+| KMS y Secrets Manager | clave, solicitudes y 3 secretos | USD 2,36 |
+| CloudWatch | 6 alarmas + 5 GB de logs | USD 3,12 |
 
 ## Costo único de la carga inicial
 
@@ -77,9 +76,9 @@ la primera fase utiliza VPN.
 
 | Escenario | Cambio | Estimación mensual |
 |---|---|---:|
-| Productivo base | Arquitectura completa y gateways en AWS | USD 662,22 |
-| Gateway corporativo existente | Los dos nodos se operan on-premise | USD 379,74 |
-| ETL programado | Worker activo unas 4 horas diarias en vez de 24/7 | aproximadamente USD 604 |
+| Productivo base | Arquitectura completa y gateways en AWS | USD 736,54 |
+| Gateway corporativo existente | Los dos nodos se operan on-premise | USD 454,06 |
+| ETL programado | Worker activo unas 4 horas diarias en vez de 24/7 | requiere recalcular en Calculator |
 | Desarrollo | Single-AZ, tamaños menores y recursos apagables | debe calcularse por horas de uso |
 
 La alternativa de gateway corporativo sólo es válida si la organización ya
@@ -111,6 +110,7 @@ es costo cero para el negocio, sino costo fuera de AWS.
 ## Referencias de precios
 
 - [AWS Pricing Calculator](https://calculator.aws/)
+- [Estimación compartida del proyecto](https://calculator.aws/#/estimate?id=0ab6fdd1ac2c32ff107e872747339ad9ffbed689)
 - [Precios On-Demand de Amazon EC2](https://aws.amazon.com/ec2/pricing/on-demand/)
 - [Precios de Amazon RDS for PostgreSQL](https://aws.amazon.com/rds/postgresql/pricing/)
 - [Precios de Amazon S3](https://aws.amazon.com/s3/pricing/)

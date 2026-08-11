@@ -14,7 +14,7 @@ def test_documented_monthly_and_one_time_totals() -> None:
     _, monthly_total = calculate(data["monthly_items"])
     _, one_time_total = calculate(data["one_time_items"])
 
-    assert monthly_total == Decimal("662.22")
+    assert monthly_total == Decimal("736.54")
     assert one_time_total == Decimal("3.204")
 
 

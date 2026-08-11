@@ -97,13 +97,15 @@ La reversa reactiva el consumo anterior y conserva Landing y RDS para diagnósti
 
 **Tiempo:** 75 segundos.
 
-> El escenario productivo On-Demand cuesta aproximadamente USD 662 por mes. El
-> 81,6 % está en RDS Multi-AZ y los dos nodos Windows del Power BI Gateway. S3 y
+> El escenario productivo On-Demand cuesta aproximadamente USD 737 por mes. AWS
+> Pricing Calculator informa USD 700,04 y la VPN, ausente del catálogo público,
+> agrega USD 36,50 según la tarifa oficial. El 78,8 % está en RDS Multi-AZ y los
+> dos nodos Windows del Power BI Gateway. S3 y
 > AppFlow no dominan el presupuesto.
 
 Explicar las alternativas:
 
-- gateway corporativo existente: costo AWS aproximado de USD 379,74;
+- gateway corporativo existente: costo AWS aproximado de USD 454,06;
 - ETL programado: ahorro frente a mantener el worker encendido permanentemente;
 - reserva RDS: evaluar sólo después de medir carga real;
 - lifecycle S3: archivar Landing y versiones antiguas.
@@ -182,10 +184,10 @@ No completamente. Demuestra APIs, configuración y reproducibilidad. La
 aplicación efectiva de políticas, KMS, Multi-AZ, VPN y rendimiento se valida en
 una cuenta AWS de prueba antes de producción.
 
-### ¿Los USD 662 son una cotización?
+### ¿Los USD 736,54 son una cotización?
 
 No. Son una estimación On-Demand reproducible con precios y cantidades
-versionados. Debe recrearse en AWS Pricing Calculator al aprobar el proyecto y
+versionados. Fue recreada en AWS Pricing Calculator y debe revisarse nuevamente al aprobar el proyecto y
 revisarse después de la prueba de volumen.
 
 ### ¿Qué dato falta confirmar?

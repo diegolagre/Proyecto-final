@@ -32,7 +32,7 @@ la confidencialidad, el proyecto usa información CO-PA completamente sintética
 - Mantener RDS privado y el acceso SaaS mediante Power BI Gateway.
 - Completar el corte analítico en diez semanas, con una interrupción menor a
   cuatro horas y reversa documentada.
-- Mantener el escenario productivo base alrededor de USD 662 mensuales antes de
+- Mantener el escenario productivo base alrededor de USD 737 mensuales antes de
   descuentos e impuestos.
 
 La demostración local termina con 1.050 registros únicos: 1.000 iniciales y 50
@@ -153,18 +153,20 @@ una transferencia formal después del hypercare. El detalle está en
 | Categoría | Mensual |
 |---|---:|
 | Power BI Gateway en AWS | USD 282,48 |
-| RDS PostgreSQL Multi-AZ | USD 257,99 |
-| EC2 ETL y EBS | USD 72,48 |
-| Red | USD 38,30 |
-| S3, AppFlow, seguridad y monitoreo | USD 10,97 |
-| **Total mensual calculado** | **USD 662,22** |
-| **Total anual sin descuentos** | **USD 7.946,64** |
+| RDS PostgreSQL Multi-AZ | USD 298,14 |
+| EC2 ETL y EBS | USD 108,48 |
+| VPN complementaria | USD 36,50 |
+| S3, AppFlow, seguridad y monitoreo | USD 10,94 |
+| **Subtotal AWS Pricing Calculator** | **USD 700,04** |
+| **Total mensual completo** | **USD 736,54** |
+| **Total anual recurrente** | **USD 8.838,48** |
 
-El renglón agrupado suma varias categorías menores; el total se calcula desde
-cada precio unitario versionado. La estimación
-incluye transferencia saliente, backups adicionales, solicitudes S3, VPN, KMS,
-secretos y logs. Excluye impuestos, soporte, licencias SAP/Power BI, Direct
-Connect y horas profesionales.
+El renglón agrupado suma varias categorías menores. AWS Pricing Calculator no
+ofrece Site-to-Site VPN en su catálogo público, por lo que sus USD 36,50 se
+agregan con la tarifa oficial de USD 0,05 por conexión-hora. La estimación
+incluye backups adicionales, solicitudes S3, KMS, secretos y logs. Los 20 GB de
+transferencia quedan cubiertos por la franquicia agregada vigente. Excluye
+impuestos, soporte, licencias SAP/Power BI, Direct Connect y horas profesionales.
 
 ### Demostración
 

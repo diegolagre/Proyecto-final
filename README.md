@@ -63,7 +63,7 @@ Los objetivos SMART, el cronograma, el corte y la reversa están definidos en
 [`docs/migration-plan.md`](docs/migration-plan.md).
 La estimación mensual reproducible y sus supuestos se encuentran en
 [`docs/cost-estimate.md`](docs/cost-estimate.md).
-La guía para adjuntar la evidencia oficial de AWS Pricing Calculator está en
+La evidencia oficial y su conciliación con la VPN complementaria están en
 [`docs/aws-pricing-calculator-evidence.md`](docs/aws-pricing-calculator-evidence.md).
 La auditoría final y los pendientes externos están registrados en
 [`docs/readiness-audit.md`](docs/readiness-audit.md).

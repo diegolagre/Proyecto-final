@@ -135,7 +135,7 @@ def build():
         "Procesar carga inicial y deltas sin perdidas ni duplicados y conciliar diferencias menores o iguales a 0,1 %.",
         "Mantener RDS privado y habilitar usuarios internos por VPN y Power BI mediante gateway TLS.",
         "Estabilizar durante cinco dias habiles sin incidentes criticos abiertos.",
-        "Mantener el escenario base alrededor de USD 662,22 mensuales antes de descuentos e impuestos.",
+        "Mantener el escenario base alrededor de USD 736,54 mensuales antes de descuentos e impuestos.",
     ])
     story += [p("Resultado demostrable", "Section"), p(
         "Un unico recorrido crea cinco servicios AWS en LocalStack, procesa 1.000 registros "
@@ -202,17 +202,16 @@ def build():
     costs = [
         ["Categoria", "Mensual"],
         ["Power BI Gateway en AWS", "USD 282,48"],
-        ["RDS PostgreSQL Multi-AZ", "USD 257,99"],
-        ["EC2 ETL y EBS", "USD 72,48"],
-        ["Red", "USD 38,30"],
-        ["S3, AppFlow, seguridad y monitoreo", "USD 10,97"],
-        ["Total mensual / anual", "USD 662,22 / USD 7.946,64"],
+        ["RDS PostgreSQL Multi-AZ", "USD 298,14"],
+        ["EC2 ETL y EBS", "USD 108,48"],
+        ["VPN fuera del Calculator", "USD 36,50"],
+        ["S3, AppFlow, seguridad y monitoreo", "USD 10,94"],
+        ["Total mensual / anual", "USD 736,54 / USD 8.838,48"],
     ]
     story += [p("Estimacion productiva", "Section"), table(costs, [115 * mm, 59 * mm])]
     story += [p(
-        "Incluye transferencia saliente, backups adicionales, solicitudes S3, VPN, KMS, "
-        "secretos y logs. La evidencia oficial debe recrearse y exportarse desde AWS Pricing "
-        "Calculator antes de entregar; el repositorio no presenta un enlace ficticio.", "Callout"
+        "Calculator informa USD 700,04. La VPN no aparece en su catalogo publico y agrega "
+        "USD 36,50 con la tarifa oficial. Incluye backups, solicitudes S3, KMS, secretos y logs.", "Callout"
     ), PageBreak()]
 
     # Hoja 4
@@ -270,7 +269,7 @@ def build():
         ["SMART, Gantt y cutover", "docs/migration-plan.md"],
         ["Dimensionamiento", "docs/sizing.md e iac/"],
         ["Costos", "docs/cost-estimate.md y costs/aws-us-east-1.json"],
-        ["Pricing Calculator", "Checklist listo; enlace/exportacion aun pendiente"],
+        ["Pricing Calculator", "PDF oficial, enlace compartido y conciliacion"],
         ["Cuatro o mas servicios", "compose.yaml y scripts/bootstrap_cloud.py"],
         ["Cultura y procesos", "docs/change-management.md"],
         ["Pruebas", "scripts/check.sh y tests/"],
@@ -279,15 +278,13 @@ def build():
     story += [p("Pendientes externos antes de entregar", "Section")]
     story += [p(
         "• Confirmar us-east-1 como region definitiva.<br/>"
-        "• Crear la estimacion real en AWS Pricing Calculator y adjuntar enlace y PDF/capturas.<br/>"
         "• Confirmar EntitySet OData de CE1xxxx, delta queue y Connector Profile para un piloto real.<br/>"
         "• Ensayar la defensa, backup, restauracion, corte y reversa."
     )]
     story += [p("Conclusion", "Section"), p(
         "El repositorio cubre alcance, arquitectura, tiempo, recursos, costos, diez servicios "
-        "evaluados, codigo reproducible, seguridad y gestion del cambio. La unica evidencia "
-        "academica no generable desde el entorno local es la exportacion autentica de AWS "
-        "Pricing Calculator.", "Callout"
+        "evaluados, codigo reproducible, seguridad y gestion del cambio. La estimacion oficial "
+        "y la VPN complementaria quedan trazadas con sus fuentes y supuestos.", "Callout"
     )]
 
     doc.build(story)
