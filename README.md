@@ -43,6 +43,8 @@ El escenario base de capacidad, crecimiento y escalabilidad se detalla en
 [`docs/sizing.md`](docs/sizing.md).
 Los controles de identidad, cifrado, secretos y monitoreo se describen en
 [`docs/security.md`](docs/security.md).
+Los objetivos SMART, el cronograma, el corte y la reversa están definidos en
+[`docs/migration-plan.md`](docs/migration-plan.md).
 
 ## Estado actual
 
@@ -119,7 +121,8 @@ contraseña SAP dentro del estado Terraform.
 │   ├── architecture.md      # Arquitectura y conectividad
 │   ├── decisions.md         # Decisiones de arquitectura
 │   ├── sizing.md            # Volumen, capacidad y escalabilidad
-│   └── security.md          # Seguridad y monitoreo
+│   ├── security.md          # Seguridad y monitoreo
+│   └── migration-plan.md    # Objetivos SMART y cronograma
 ├── iam/
 │   └── trust_policy.json    # EC2 asume el rol de integración
 ├── iac/                     # Infraestructura como código

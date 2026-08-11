@@ -79,3 +79,11 @@
 **Alternativas:** claves administradas por AWS o cifrado SSE-S3.
 **Tradeoff:** la CMK agrega costo y responsabilidades de permisos, a cambio de mayor control y auditoría.
 **Resultado:** la línea base KMS es opcional y sólo se habilita al desplegar sobre AWS real.
+
+### 011 — Realizar un corte progresivo con reversa
+
+**Decisión:** cargar el histórico antes del corte, procesar un delta final y habilitar primero un grupo piloto.
+**Contexto:** el ERP continúa operativo y el cambio afecta la plataforma analítica, no las transacciones SAP.
+**Alternativas:** corte directo para todos los usuarios o ejecución paralela indefinida.
+**Tradeoff:** requiere conciliación y una semana de hypercare, pero reduce el impacto de resultados incorrectos.
+**Resultado:** el cronograma contempla ensayo, Go/No-Go, corte menor a cuatro horas y condiciones explícitas de reversa.
