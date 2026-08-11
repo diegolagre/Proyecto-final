@@ -85,8 +85,11 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "data" {
 
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
+      sse_algorithm     = var.create_security_baseline ? "aws:kms" : "AES256"
+      kms_master_key_id = var.create_security_baseline ? aws_kms_key.data[0].arn : null
     }
+
+    bucket_key_enabled = var.create_security_baseline
   }
 }
 
@@ -141,6 +144,21 @@ data "aws_iam_policy_document" "etl_data_access" {
     actions   = ["s3:PutObject"]
     resources = ["${aws_s3_bucket.curated.arn}/*"]
   }
+
+  dynamic "statement" {
+    for_each = var.create_security_baseline ? [1] : []
+
+    content {
+      sid    = "UseDataEncryptionKey"
+      effect = "Allow"
+      actions = [
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:GenerateDataKey"
+      ]
+      resources = [aws_kms_key.data[0].arn]
+    }
+  }
 }
 
 resource "aws_iam_role_policy" "etl_data_access" {
@@ -164,30 +182,37 @@ resource "aws_db_subnet_group" "analytics" {
 resource "aws_db_instance" "analytics" {
   count = var.create_rds ? 1 : 0
 
-  identifier                   = "${local.name_prefix}-postgres"
-  engine                       = "postgres"
-  engine_version               = "16"
-  instance_class               = var.database_instance_class
-  allocated_storage            = var.database_allocated_storage
-  max_allocated_storage        = var.database_max_allocated_storage
-  storage_type                 = "gp3"
-  storage_encrypted            = true
-  db_name                      = var.database_name
-  username                     = var.database_username
-  password                     = var.database_password
-  db_subnet_group_name         = aws_db_subnet_group.analytics[0].name
-  vpc_security_group_ids       = [aws_security_group.database.id]
-  publicly_accessible          = false
-  multi_az                     = var.environment == "prod"
-  backup_retention_period      = var.environment == "prod" ? 14 : 7
-  deletion_protection          = var.environment == "prod"
-  skip_final_snapshot          = var.environment != "prod"
-  performance_insights_enabled = var.environment == "prod"
+  identifier                    = "${local.name_prefix}-postgres"
+  engine                        = "postgres"
+  engine_version                = "16"
+  instance_class                = var.database_instance_class
+  allocated_storage             = var.database_allocated_storage
+  max_allocated_storage         = var.database_max_allocated_storage
+  storage_type                  = "gp3"
+  storage_encrypted             = true
+  kms_key_id                    = var.create_security_baseline ? aws_kms_key.data[0].arn : null
+  db_name                       = var.database_name
+  username                      = var.database_username
+  manage_master_user_password   = true
+  master_user_secret_kms_key_id = var.create_security_baseline ? aws_kms_key.data[0].arn : null
+  db_subnet_group_name          = aws_db_subnet_group.analytics[0].name
+  vpc_security_group_ids        = [aws_security_group.database.id]
+  publicly_accessible           = false
+  multi_az                      = var.environment == "prod"
+  backup_retention_period       = var.environment == "prod" ? 14 : 7
+  deletion_protection           = var.environment == "prod"
+  skip_final_snapshot           = var.environment != "prod"
+  performance_insights_enabled  = var.environment == "prod"
 
   lifecycle {
     precondition {
       condition     = var.database_max_allocated_storage >= var.database_allocated_storage * 1.1
       error_message = "El máximo de almacenamiento de RDS debe superar al inicial en al menos 10 %."
+    }
+
+    precondition {
+      condition     = !var.create_security_baseline || !var.use_localstack
+      error_message = "create_security_baseline sólo puede habilitarse contra AWS real."
     }
   }
 }

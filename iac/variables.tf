@@ -73,11 +73,6 @@ variable "appflow_connector_profile_name" {
   type        = string
   description = "Nombre de un Connector Profile SAPOData previamente creado con credenciales seguras."
   default     = null
-
-  validation {
-    condition     = !var.create_appflow || var.appflow_connector_profile_name != null
-    error_message = "Cuando create_appflow=true se debe indicar appflow_connector_profile_name."
-  }
 }
 
 variable "appflow_sap_object_path" {
@@ -98,6 +93,18 @@ variable "create_rds" {
   default     = false
 }
 
+variable "create_security_baseline" {
+  type        = bool
+  description = "Crea una clave KMS administrada por el proyecto para S3 y RDS. Se habilita únicamente en AWS real."
+  default     = false
+}
+
+variable "alarm_actions" {
+  type        = list(string)
+  description = "ARN de topics SNS u otras acciones para las alarmas CloudWatch."
+  default     = []
+}
+
 variable "database_name" {
   type        = string
   description = "Nombre de la base analítica."
@@ -108,18 +115,6 @@ variable "database_username" {
   type        = string
   description = "Usuario administrador inicial de RDS."
   default     = "analytics_admin"
-}
-
-variable "database_password" {
-  type        = string
-  description = "Contraseña inicial de RDS. Sólo se usa cuando create_rds=true."
-  sensitive   = true
-  default     = null
-
-  validation {
-    condition     = !var.create_rds || (var.database_password != null && length(var.database_password) >= 16)
-    error_message = "Cuando create_rds=true, database_password debe tener al menos 16 caracteres."
-  }
 }
 
 variable "database_instance_class" {

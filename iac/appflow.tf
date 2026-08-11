@@ -57,4 +57,11 @@ resource "aws_appflow_flow" "sap_copa_to_landing" {
     source_fields = []
     connector_operator { sapo_data = "NO_OP" }
   }
+
+  lifecycle {
+    precondition {
+      condition     = var.appflow_connector_profile_name != null
+      error_message = "Cuando create_appflow=true se debe indicar appflow_connector_profile_name."
+    }
+  }
 }

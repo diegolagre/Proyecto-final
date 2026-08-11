@@ -38,3 +38,14 @@ output "rds_endpoint" {
   description = "Endpoint privado de RDS cuando create_rds=true."
   sensitive   = true
 }
+
+output "rds_master_secret_arn" {
+  value       = var.create_rds ? aws_db_instance.analytics[0].master_user_secret[0].secret_arn : null
+  description = "ARN del secreto administrado automáticamente por RDS."
+  sensitive   = true
+}
+
+output "data_kms_key_arn" {
+  value       = var.create_security_baseline ? aws_kms_key.data[0].arn : null
+  description = "Clave KMS utilizada para S3 y RDS cuando la línea base está habilitada."
+}

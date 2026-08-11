@@ -41,6 +41,8 @@ imagen actualizada para la presentación está disponible en
 [`outputs/arquitectura-sap-erp-slt-aws-consumo-v2.png`](outputs/arquitectura-sap-erp-slt-aws-consumo-v2.png).
 El escenario base de capacidad, crecimiento y escalabilidad se detalla en
 [`docs/sizing.md`](docs/sizing.md).
+Los controles de identidad, cifrado, secretos y monitoreo se describen en
+[`docs/security.md`](docs/security.md).
 
 ## Estado actual
 
@@ -101,7 +103,8 @@ terraform plan \
   -var='appflow_connector_profile_name=<perfil-sap-odata>' \
   -var='appflow_sap_object_path=<entity-set-copa>' \
   -var='create_compute=true' \
-  -var='ec2_ami_id=<ami-aprobada>'
+  -var='ec2_ami_id=<ami-aprobada>' \
+  -var='create_security_baseline=true'
 ```
 
 El Connector Profile no se crea en este módulo para evitar guardar la
@@ -115,7 +118,8 @@ contraseña SAP dentro del estado Terraform.
 ├── docs/
 │   ├── architecture.md      # Arquitectura y conectividad
 │   ├── decisions.md         # Decisiones de arquitectura
-│   └── sizing.md            # Volumen, capacidad y escalabilidad
+│   ├── sizing.md            # Volumen, capacidad y escalabilidad
+│   └── security.md          # Seguridad y monitoreo
 ├── iam/
 │   └── trust_policy.json    # EC2 asume el rol de integración
 ├── iac/                     # Infraestructura como código

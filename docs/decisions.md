@@ -63,3 +63,19 @@
 **Alternativas:** EC2 única, Lambda, Glue o Airbyte.
 **Tradeoff:** Auto Scaling agrega configuración, pero permite reemplazo automático y escalabilidad.
 **Resultado:** el grupo mantiene entre cero y cuatro workers según el ambiente y escala por CPU.
+
+### 009 — Administrar la credencial maestra de RDS con Secrets Manager
+
+**Decisión:** permitir que RDS genere, almacene y rote la contraseña maestra.
+**Contexto:** una contraseña ingresada como variable puede persistir en el estado de Terraform.
+**Alternativas:** variable sensible, secreto creado manualmente o credenciales IAM para base de datos.
+**Tradeoff:** aumenta la dependencia de Secrets Manager, pero elimina el manejo manual del secreto maestro.
+**Resultado:** Terraform expone únicamente el ARN sensible del secreto; ETL y BI usarán usuarios separados.
+
+### 010 — Utilizar una clave KMS de datos en producción
+
+**Decisión:** cifrar S3 y RDS con una clave administrada por el proyecto y rotación habilitada.
+**Contexto:** se necesita control explícito del ciclo de vida y los permisos de cifrado.
+**Alternativas:** claves administradas por AWS o cifrado SSE-S3.
+**Tradeoff:** la CMK agrega costo y responsabilidades de permisos, a cambio de mayor control y auditoría.
+**Resultado:** la línea base KMS es opcional y sólo se habilita al desplegar sobre AWS real.
