@@ -45,6 +45,8 @@ Los controles de identidad, cifrado, secretos y monitoreo se describen en
 [`docs/security.md`](docs/security.md).
 Los objetivos SMART, el cronograma, el corte y la reversa están definidos en
 [`docs/migration-plan.md`](docs/migration-plan.md).
+La estimación mensual reproducible y sus supuestos se encuentran en
+[`docs/cost-estimate.md`](docs/cost-estimate.md).
 
 ## Estado actual
 
@@ -117,12 +119,14 @@ contraseña SAP dentro del estado Terraform.
 ```text
 .
 ├── compose.yaml             # LocalStack + PostgreSQL
+├── costs/                   # Precios y supuestos reproducibles
 ├── docs/
 │   ├── architecture.md      # Arquitectura y conectividad
 │   ├── decisions.md         # Decisiones de arquitectura
 │   ├── sizing.md            # Volumen, capacidad y escalabilidad
 │   ├── security.md          # Seguridad y monitoreo
-│   └── migration-plan.md    # Objetivos SMART y cronograma
+│   ├── migration-plan.md    # Objetivos SMART y cronograma
+│   └── cost-estimate.md     # Estimación mensual AWS
 ├── iam/
 │   └── trust_policy.json    # EC2 asume el rol de integración
 ├── iac/                     # Infraestructura como código
@@ -140,6 +144,7 @@ contraseña SAP dentro del estado Terraform.
 - [x] Servicios locales definidos en `compose.yaml`
 - [x] Pruebas unitarias con `pytest`
 - [x] Ejecución end-to-end documentada y validada
+- [x] Dimensionamiento y estimación mensual de costos
 
 ## Referencias del curso
 

@@ -1,0 +1,186 @@
+{
+  "currency": "USD",
+  "region": "us-east-1",
+  "price_reference_date": "2026-08-10",
+  "scenario": "production-base",
+  "monthly_items": [
+    {
+      "category": "Compute",
+      "service": "EC2 ETL Linux m6i.large",
+      "quantity": 730,
+      "unit": "instance-hour",
+      "unit_price": 0.096,
+      "assumption": "1 worker desired running continuously"
+    },
+    {
+      "category": "Compute",
+      "service": "EBS gp3 ETL",
+      "quantity": 30,
+      "unit": "GB-month",
+      "unit_price": 0.08,
+      "assumption": "30 GB root volume"
+    },
+    {
+      "category": "BI connectivity",
+      "service": "EC2 Windows Power BI Gateway m6i.large",
+      "quantity": 1460,
+      "unit": "instance-hour",
+      "unit_price": 0.188,
+      "assumption": "2 nodes for gateway high availability"
+    },
+    {
+      "category": "BI connectivity",
+      "service": "EBS gp3 Power BI Gateway",
+      "quantity": 100,
+      "unit": "GB-month",
+      "unit_price": 0.08,
+      "assumption": "2 volumes of 50 GB"
+    },
+    {
+      "category": "Database",
+      "service": "RDS PostgreSQL db.m6g.large Multi-AZ",
+      "quantity": 730,
+      "unit": "instance-hour",
+      "unit_price": 0.318,
+      "assumption": "On-Demand, 730 hours"
+    },
+    {
+      "category": "Database",
+      "service": "RDS gp3 Multi-AZ",
+      "quantity": 100,
+      "unit": "GB-month",
+      "unit_price": 0.23,
+      "assumption": "100 GB provisioned"
+    },
+    {
+      "category": "Database",
+      "service": "RDS additional backup storage",
+      "quantity": 30,
+      "unit": "GB-month",
+      "unit_price": 0.095,
+      "assumption": "30 GB beyond the free automated-backup allowance"
+    },
+    {
+      "category": "Storage",
+      "service": "S3 Standard",
+      "quantity": 200,
+      "unit": "GB-month",
+      "unit_price": 0.023,
+      "assumption": "Landing, Curated, versions and temporary data"
+    },
+    {
+      "category": "Storage",
+      "service": "S3 PUT/COPY/POST/LIST",
+      "quantity": 10,
+      "unit": "thousand-requests",
+      "unit_price": 0.005,
+      "assumption": "10,000 monthly requests"
+    },
+    {
+      "category": "Storage",
+      "service": "S3 GET",
+      "quantity": 100,
+      "unit": "thousand-requests",
+      "unit_price": 0.0004,
+      "assumption": "100,000 monthly requests"
+    },
+    {
+      "category": "Ingestion",
+      "service": "Amazon AppFlow executions",
+      "quantity": 730,
+      "unit": "flow-run",
+      "unit_price": 0.001,
+      "assumption": "Hourly incremental execution"
+    },
+    {
+      "category": "Ingestion",
+      "service": "Amazon AppFlow data processing",
+      "quantity": 2,
+      "unit": "GB",
+      "unit_price": 0.02,
+      "assumption": "Monthly incremental data"
+    },
+    {
+      "category": "Network",
+      "service": "AWS Site-to-Site VPN",
+      "quantity": 730,
+      "unit": "connection-hour",
+      "unit_price": 0.05,
+      "assumption": "One VPN connection with two tunnels"
+    },
+    {
+      "category": "Network",
+      "service": "Data transfer out to Power BI",
+      "quantity": 20,
+      "unit": "GB",
+      "unit_price": 0.09,
+      "assumption": "Conservative internet egress allowance"
+    },
+    {
+      "category": "Security",
+      "service": "AWS KMS customer-managed key",
+      "quantity": 1,
+      "unit": "key-month",
+      "unit_price": 1.0,
+      "assumption": "One rotating data key"
+    },
+    {
+      "category": "Security",
+      "service": "AWS KMS API requests",
+      "quantity": 2,
+      "unit": "ten-thousand-requests",
+      "unit_price": 0.03,
+      "assumption": "20,000 cryptographic requests"
+    },
+    {
+      "category": "Security",
+      "service": "AWS Secrets Manager",
+      "quantity": 3,
+      "unit": "secret-month",
+      "unit_price": 0.4,
+      "assumption": "RDS master, ETL and BI credentials"
+    },
+    {
+      "category": "Monitoring",
+      "service": "CloudWatch standard alarms",
+      "quantity": 6,
+      "unit": "alarm-month",
+      "unit_price": 0.1,
+      "assumption": "RDS, ETL, ingestion and VPN alarms"
+    },
+    {
+      "category": "Monitoring",
+      "service": "CloudWatch Logs ingestion",
+      "quantity": 5,
+      "unit": "GB",
+      "unit_price": 0.5,
+      "assumption": "5 GB ingested monthly"
+    },
+    {
+      "category": "Monitoring",
+      "service": "CloudWatch Logs storage",
+      "quantity": 5,
+      "unit": "GB-month",
+      "unit_price": 0.03,
+      "assumption": "One month of hot logs"
+    }
+  ],
+  "one_time_items": [
+    {
+      "category": "Migration",
+      "service": "AppFlow initial data processing",
+      "quantity": 45,
+      "unit": "GB",
+      "unit_price": 0.02,
+      "assumption": "Estimated initial CSV-equivalent transfer"
+    },
+    {
+      "category": "Migration",
+      "service": "Temporary EC2 ETL worker",
+      "quantity": 24,
+      "unit": "instance-hour",
+      "unit_price": 0.096,
+      "assumption": "Second m6i.large worker for one day"
+    }
+  ]
+}
