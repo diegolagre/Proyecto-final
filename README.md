@@ -6,6 +6,8 @@ Proyecto integrador del módulo Cloud Computing (ITBA).
 
 > **Entrega:** la guía compacta para evaluación y defensa está en
 > [`docs/delivery-guide.md`](docs/delivery-guide.md).
+> La presentación final está disponible en
+> [`outputs/proyecto-final-sap-analytics-aws.pptx`](outputs/proyecto-final-sap-analytics-aws.pptx).
 
 El proyecto migra la capa analítica de un SAP ERP on-premise hacia AWS. La
 extracción se realiza desde el ERP mediante SAP SLT; SAP BW no forma parte del
