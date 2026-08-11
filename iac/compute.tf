@@ -40,7 +40,14 @@ resource "aws_launch_template" "etl" {
     }
   }
 
-  lifecycle { create_before_destroy = true }
+  lifecycle {
+    create_before_destroy = true
+
+    precondition {
+      condition     = var.ec2_ami_id != "ami-00000000000000000"
+      error_message = "Cuando create_compute=true se debe indicar una AMI aprobada para el worker ETL."
+    }
+  }
 }
 
 resource "aws_autoscaling_group" "etl" {

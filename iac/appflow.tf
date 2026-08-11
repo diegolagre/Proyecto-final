@@ -63,5 +63,10 @@ resource "aws_appflow_flow" "sap_copa_to_landing" {
       condition     = var.appflow_connector_profile_name != null
       error_message = "Cuando create_appflow=true se debe indicar appflow_connector_profile_name."
     }
+
+    precondition {
+      condition     = var.appflow_sap_object_path != "REPLACE_WITH_COPA_ENTITY_SET"
+      error_message = "Cuando create_appflow=true se debe indicar el EntitySet OData real de CO-PA."
+    }
   }
 }

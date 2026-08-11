@@ -6,6 +6,13 @@ resource "aws_kms_key" "data" {
   deletion_window_in_days = 30
 
   tags = { Name = "${local.name_prefix}-data" }
+
+  lifecycle {
+    precondition {
+      condition     = !var.use_localstack
+      error_message = "create_security_baseline sólo puede habilitarse contra AWS real."
+    }
+  }
 }
 
 resource "aws_kms_alias" "data" {

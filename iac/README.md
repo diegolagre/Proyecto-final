@@ -1,63 +1,77 @@
-# `iac/` — Infrastructure as Code
+# Infraestructura Terraform
 
-Tu infraestructura definida en Terraform. El starter te deja la estructura — vos elegís el provider y agregás recursos.
+Este directorio define la arquitectura objetivo en AWS y conserva LocalStack
+como modo seguro por defecto. Reutiliza la estructura y las convenciones de
+`cloud-foundations-lab`: variables tipadas, estado no versionado, provider local
+y recursos con etiquetas consistentes.
 
-## Cómo funciona
+## Recursos definidos
 
+- VPC y dos subredes privadas.
+- Security groups separados para ETL y PostgreSQL.
+- Buckets S3 Landing y Curated con versionado, cifrado y bloqueo público.
+- Rol e instance profile IAM de mínimo privilegio.
+- Launch Template y Auto Scaling Group para workers ETL.
+- Flujo AppFlow opcional SAP OData → S3 Landing.
+- RDS PostgreSQL opcional, privado y Multi-AZ en producción.
+- KMS, Secrets Manager administrado por RDS y alarmas CloudWatch.
+
+## Validación local
+
+Terraform 1.5 o superior:
+
+```bash
+cd iac
+terraform init -backend=false
+terraform fmt -check -recursive
+terraform validate
+terraform plan
 ```
-iac/
-├── main.tf              ← tus recursos
-├── variables.tf         ← inputs configurables (project_name, region, etc.)
-├── outputs.tf           ← lo que querés exponer
-└── providers/
-    ├── aws-local.tf.example     ← AWS contra LocalStack
-    ├── azure-local.tf.example   ← Azure contra Azurite
-    └── gcp-local.tf.example     ← GCP contra fake-gcs / cloud-storage emulator
+
+El modo predeterminado usa LocalStack y no habilita AppFlow, EC2, RDS ni KMS.
+La demostración materializa los servicios locales mediante
+`scripts/bootstrap_cloud.py`, porque LocalStack Community no reproduce todos los
+servicios administrados de AWS.
+
+## Plan productivo
+
+Ejemplo deliberadamente incompleto: los valores entre ángulos deben provenir
+del equipo SAP y de la cuenta AWS antes de ejecutar el plan.
+
+```bash
+terraform plan \
+  -var='environment=prod' \
+  -var='use_localstack=false' \
+  -var='create_appflow=true' \
+  -var='appflow_connector_profile_name=<perfil-sap-odata>' \
+  -var='appflow_sap_object_path=<entity-set-copa>' \
+  -var='create_compute=true' \
+  -var='ec2_ami_id=<ami-aprobada>' \
+  -var='create_rds=true' \
+  -var='create_security_baseline=true'
 ```
 
-## Setup
+Terraform falla de forma explícita si se intenta crear AppFlow sin Connector
+Profile/EntitySet, EC2 con la AMI ficticia o KMS apuntando a LocalStack.
 
-1. Elegí UN provider y renombrá su archivo `.tf.example` → `.tf`:
+## Credenciales y estado
 
-   ```bash
-   # Para AWS local
-   mv iac/providers/aws-local.tf.example iac/providers/aws-local.tf
+- El Connector Profile se crea fuera del módulo para no persistir la contraseña
+  SAP dentro del estado.
+- RDS genera la contraseña maestra y la administra mediante Secrets Manager.
+- El backend local sólo sirve para desarrollo. Producción debe utilizar un
+  backend remoto cifrado, versionado y con bloqueo de estado.
+- No se deben guardar `.tfstate`, planes, `.env` ni secretos en Git.
 
-   # O para Azure local
-   mv iac/providers/azure-local.tf.example iac/providers/azure-local.tf
+## Archivos
 
-   # O para GCP local
-   mv iac/providers/gcp-local.tf.example iac/providers/gcp-local.tf
-   ```
-
-2. Inicializá:
-
-   ```bash
-   cd iac
-   terraform init
-   ```
-
-3. Aplicá:
-
-   ```bash
-   terraform plan
-   terraform apply
-   ```
-
-## Madurez de cada combinación
-
-| Provider local | Estado | Notas |
-|---|---|---|
-| AWS + LocalStack (community) | ✅ probado | la combinación estándar del curso |
-| AWS + ministack / Floci | ⚠️ experimental | drop-in replacement de LocalStack |
-| Azure + Azurite | ⚠️ solo storage | Azurite emula Blob; otros servicios Azure no |
-| GCP + fake-gcs-server | ⚠️ solo storage | similar a Azurite — alcance limitado |
-
-Para AWS real / Azure real / GCP real, remové el endpoint custom de los providers y configurá credenciales reales.
-
-## Convenciones
-
-- **Un módulo por capa** (network, identity, compute, data) si el proyecto crece
-- **Variables tipadas y con descripción** — `terraform validate` te ayuda
-- **No commitear `.tfstate`** (ya está en .gitignore)
-- **Backend remoto en prod** (S3 + DynamoDB lock para AWS; equivalentes para los otros)
+| Archivo | Responsabilidad |
+|---|---|
+| `providers.tf` | Versión y configuración del provider AWS/LocalStack |
+| `main.tf` | VPC, S3, IAM y RDS |
+| `appflow.tf` | Flujo SAP OData hacia Landing |
+| `compute.tf` | Launch Template y Auto Scaling |
+| `security.tf` | KMS y políticas HTTPS de S3 |
+| `monitoring.tf` | Alarmas de CPU y almacenamiento RDS |
+| `variables.tf` | Parámetros y valores base de dimensionamiento |
+| `outputs.tf` | Identificadores y endpoints sensibles |

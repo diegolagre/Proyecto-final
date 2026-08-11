@@ -54,6 +54,8 @@ Los objetivos SMART, el cronograma, el corte y la reversa están definidos en
 [`docs/migration-plan.md`](docs/migration-plan.md).
 La estimación mensual reproducible y sus supuestos se encuentran en
 [`docs/cost-estimate.md`](docs/cost-estimate.md).
+La auditoría final y los pendientes externos están registrados en
+[`docs/readiness-audit.md`](docs/readiness-audit.md).
 
 ## Estado actual
 
@@ -145,7 +147,8 @@ contraseña SAP dentro del estado Terraform.
 │   ├── migration-plan.md    # Objetivos SMART y cronograma
 │   ├── cost-estimate.md     # Estimación mensual AWS
 │   ├── delivery-guide.md    # Entrega breve y matriz de evidencias
-│   └── defense-script.md    # Guion y preguntas de la defensa
+│   ├── defense-script.md    # Guion y preguntas de la defensa
+│   └── readiness-audit.md   # Auditoría previa a la entrega
 ├── iam/
 │   └── trust_policy.json    # EC2 asume el rol de integración
 ├── iac/                     # Infraestructura como código
@@ -157,7 +160,7 @@ contraseña SAP dentro del estado Terraform.
 ## Checklist de entrega
 
 - [x] Arquitectura y componentes documentados
-- [x] Cinco decisiones de arquitectura
+- [x] Once decisiones de arquitectura
 - [x] Política IAM del proceso ETL
 - [x] Demostraciones automatizadas e idempotentes
 - [x] Servicios locales definidos en `compose.yaml`
