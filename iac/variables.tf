@@ -57,6 +57,12 @@ variable "ec2_ami_id" {
   default     = "ami-00000000000000000"
 }
 
+variable "ec2_instance_type" {
+  type        = string
+  description = "Tipo de instancia para los workers ETL. El valor por defecto corresponde al escenario productivo base."
+  default     = "m6i.large"
+}
+
 variable "create_appflow" {
   type        = bool
   description = "Crea el flujo productivo SAP OData a S3. No está disponible en la simulación local."
@@ -113,5 +119,33 @@ variable "database_password" {
   validation {
     condition     = !var.create_rds || (var.database_password != null && length(var.database_password) >= 16)
     error_message = "Cuando create_rds=true, database_password debe tener al menos 16 caracteres."
+  }
+}
+
+variable "database_instance_class" {
+  type        = string
+  description = "Clase de instancia de RDS PostgreSQL. El valor por defecto corresponde al escenario productivo base."
+  default     = "db.m6g.large"
+}
+
+variable "database_allocated_storage" {
+  type        = number
+  description = "Almacenamiento inicial de RDS en GiB."
+  default     = 100
+
+  validation {
+    condition     = var.database_allocated_storage >= 20
+    error_message = "database_allocated_storage debe ser al menos 20 GiB."
+  }
+}
+
+variable "database_max_allocated_storage" {
+  type        = number
+  description = "Límite de autoescalado del almacenamiento de RDS en GiB."
+  default     = 200
+
+  validation {
+    condition     = var.database_max_allocated_storage >= 22
+    error_message = "database_max_allocated_storage debe ser al menos 22 GiB."
   }
 }

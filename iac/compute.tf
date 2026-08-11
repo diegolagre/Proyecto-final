@@ -3,7 +3,7 @@ resource "aws_launch_template" "etl" {
 
   name_prefix   = "${local.name_prefix}-etl-"
   image_id      = var.ec2_ami_id
-  instance_type = "t3.medium"
+  instance_type = var.ec2_instance_type
 
   iam_instance_profile {
     name = aws_iam_instance_profile.etl.name

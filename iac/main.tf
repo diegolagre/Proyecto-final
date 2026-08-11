@@ -167,9 +167,9 @@ resource "aws_db_instance" "analytics" {
   identifier                   = "${local.name_prefix}-postgres"
   engine                       = "postgres"
   engine_version               = "16"
-  instance_class               = "db.t4g.medium"
-  allocated_storage            = 100
-  max_allocated_storage        = 200
+  instance_class               = var.database_instance_class
+  allocated_storage            = var.database_allocated_storage
+  max_allocated_storage        = var.database_max_allocated_storage
   storage_type                 = "gp3"
   storage_encrypted            = true
   db_name                      = var.database_name
@@ -183,4 +183,11 @@ resource "aws_db_instance" "analytics" {
   deletion_protection          = var.environment == "prod"
   skip_final_snapshot          = var.environment != "prod"
   performance_insights_enabled = var.environment == "prod"
+
+  lifecycle {
+    precondition {
+      condition     = var.database_max_allocated_storage >= var.database_allocated_storage * 1.1
+      error_message = "El máximo de almacenamiento de RDS debe superar al inicial en al menos 10 %."
+    }
+  }
 }

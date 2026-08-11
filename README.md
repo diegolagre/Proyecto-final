@@ -39,6 +39,8 @@ La arquitectura productiva definitiva y su comparación con la demostración
 local están documentadas en [`docs/architecture.md`](docs/architecture.md). La
 imagen actualizada para la presentación está disponible en
 [`outputs/arquitectura-sap-erp-slt-aws-consumo-v2.png`](outputs/arquitectura-sap-erp-slt-aws-consumo-v2.png).
+El escenario base de capacidad, crecimiento y escalabilidad se detalla en
+[`docs/sizing.md`](docs/sizing.md).
 
 ## Estado actual
 
@@ -112,7 +114,8 @@ contraseña SAP dentro del estado Terraform.
 ├── compose.yaml             # LocalStack + PostgreSQL
 ├── docs/
 │   ├── architecture.md      # Arquitectura y conectividad
-│   └── decisions.md         # Decisiones de arquitectura
+│   ├── decisions.md         # Decisiones de arquitectura
+│   └── sizing.md            # Volumen, capacidad y escalabilidad
 ├── iam/
 │   └── trust_policy.json    # EC2 asume el rol de integración
 ├── iac/                     # Infraestructura como código
