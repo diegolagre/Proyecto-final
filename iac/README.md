@@ -61,8 +61,11 @@ Profile/EntitySet, EC2 con la AMI ficticia o KMS apuntando a LocalStack.
 - El Connector Profile se crea fuera del módulo para no persistir la contraseña
   SAP dentro del estado.
 - RDS genera la contraseña maestra y la administra mediante Secrets Manager.
-- El backend local sólo sirve para desarrollo. Producción debe utilizar un
-  backend remoto cifrado, versionado y con bloqueo de estado.
+- El stack declara un backend S3 parcial en `backend.tf`.
+- `bootstrap-state/` crea el bucket S3 cifrado/versionado y la tabla DynamoDB
+  de locking antes de inicializar el stack productivo.
+- LocalStack conserva `terraform init -backend=false`; producción inyecta la
+  configuración con `-backend-config`, sin credenciales ni IDs en Git.
 - No se deben guardar `.tfstate`, planes, `.env` ni secretos en Git.
 
 ## Archivos
@@ -70,6 +73,8 @@ Profile/EntitySet, EC2 con la AMI ficticia o KMS apuntando a LocalStack.
 | Archivo | Responsabilidad |
 |---|---|
 | `providers.tf` | Versión y configuración del provider AWS/LocalStack |
+| `backend.tf` | Declaración parcial del backend remoto S3 |
+| `bootstrap-state/` | Creación aislada de S3 y DynamoDB para estado y lock |
 | `main.tf` | VPC, S3, IAM y RDS |
 | `networking.tf` | Rutas privadas, VPC endpoints y egress de mínimo privilegio |
 | `appflow.tf` | Flujo SAP OData hacia Landing |

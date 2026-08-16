@@ -16,6 +16,7 @@ pretende reemplazar los servicios administrados de seguridad de AWS.
 | Exposición | Bloqueo público S3 y RDS privado | Public Access Block y `publicly_accessible = false` |
 | Disponibilidad | RDS Multi-AZ en producción | Backups por 14 días, protección contra borrado y snapshot final |
 | Monitoreo | Alarmas CloudWatch | CPU RDS superior a 70 % y espacio libre inferior a 10 % |
+| Estado IaC | Backend remoto protegido | S3 privado, cifrado y versionado; DynamoDB evita escrituras concurrentes |
 
 ## Flujo de credenciales
 

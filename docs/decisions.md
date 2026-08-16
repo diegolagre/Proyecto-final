@@ -87,3 +87,16 @@
 **Alternativas:** corte directo para todos los usuarios o ejecución paralela indefinida.
 **Tradeoff:** requiere conciliación y una semana de hypercare, pero reduce el impacto de resultados incorrectos.
 **Resultado:** el cronograma contempla ensayo, Go/No-Go, corte menor a cuatro horas y condiciones explícitas de reversa.
+
+### 012 — Separar y proteger el estado remoto de Terraform
+
+**Decisión:** almacenar el estado productivo en S3 cifrado y versionado, con
+locking mediante DynamoDB, creado desde una configuración de bootstrap aislada.
+**Contexto:** el estado local no permite coordinación segura y puede contener
+datos sensibles de la infraestructura.
+**Alternativas:** Terraform Cloud, estado local compartido o bloqueo nativo de
+S3 sin DynamoDB.
+**Tradeoff:** agrega dos recursos pequeños del plano de administración y un paso
+inicial, pero evita escrituras simultáneas y conserva el historial del estado.
+**Resultado:** el stack principal usa un backend S3 parcial sin IDs ni
+credenciales en Git; LocalStack continúa inicializándose con `-backend=false`.

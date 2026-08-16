@@ -20,7 +20,8 @@ IAM, Amazon VPC, Amazon S3, Amazon AppFlow, Amazon EC2, Amazon EBS, EC2 Auto
 Scaling, Amazon RDS for PostgreSQL, AWS Secrets Manager y Amazon CloudWatch.
 KMS, Site-to-Site VPN y backups se presentan como capacidades transversales de
 seguridad, conectividad y continuidad, no como servicios adicionales del núcleo
-evaluado.
+evaluado. El bucket S3 y la tabla DynamoDB del estado Terraform pertenecen al
+plano de administración de IaC y tampoco forman parte del flujo analítico.
 
 La solución combina VPC, IAM, S3, EC2 y Amazon RDS PostgreSQL. La demostración
 es local-first: LocalStack emula los servicios AWS y un contenedor PostgreSQL
@@ -124,7 +125,7 @@ cálculo de costos con un único comando:
 
 ```bash
 cd iac
-terraform init
+terraform init -backend=false
 terraform validate
 terraform plan
 terraform apply
@@ -140,12 +141,16 @@ terraform plan \
   -var='appflow_connector_profile_name=<perfil-sap-odata>' \
   -var='appflow_sap_object_path=<entity-set-copa>' \
   -var='create_compute=true' \
+  -var='create_private_endpoints=true' \
   -var='ec2_ami_id=<ami-aprobada>' \
+  -var='create_rds=true' \
   -var='create_security_baseline=true'
 ```
 
 El Connector Profile no se crea en este módulo para evitar guardar la
 contraseña SAP dentro del estado Terraform.
+Las instrucciones para crear y utilizar el backend remoto productivo están en
+[`iac/bootstrap-state/README.md`](iac/bootstrap-state/README.md).
 
 ## Estructura
 
