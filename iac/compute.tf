@@ -82,6 +82,12 @@ resource "aws_autoscaling_group" "etl" {
     strategy = "Rolling"
     preferences { min_healthy_percentage = 50 }
   }
+
+  lifecycle {
+    # desired_capacity sólo establece el valor inicial. Después del despliegue,
+    # la política de Auto Scaling es la autoridad sobre la capacidad efectiva.
+    ignore_changes = [desired_capacity]
+  }
 }
 
 resource "aws_autoscaling_policy" "etl_cpu" {

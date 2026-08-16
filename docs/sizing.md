@@ -65,6 +65,11 @@ elevar temporalmente la capacidad deseada a dos workers. Antes del despliegue se
 debe agregar una métrica de profundidad o antigüedad de la cola, porque representa
 mejor el atraso real que la CPU por sí sola.
 
+Terraform utiliza `desired_capacity = 1` únicamente para crear el grupo. El
+`lifecycle.ignore_changes` evita que ejecuciones posteriores de `terraform apply`
+reviertan las decisiones de la política de Auto Scaling. Terraform continúa
+administrando el mínimo, el máximo, el Launch Template y el Instance Refresh.
+
 ### Amazon RDS for PostgreSQL
 
 | Entorno | Clase | Despliegue | Almacenamiento | Backups |
