@@ -30,12 +30,8 @@ resource "aws_security_group" "etl" {
   description = "Egress para el worker de integracion y ETL"
   vpc_id      = aws_vpc.analytics.id
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  # Sin reglas inline. Las salidas se administran exclusivamente mediante
+  # aws_vpc_security_group_egress_rule en networking.tf.
 }
 
 resource "aws_security_group" "database" {

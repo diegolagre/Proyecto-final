@@ -8,7 +8,7 @@ pretende reemplazar los servicios administrados de seguridad de AWS.
 
 | Área | Control productivo | Implementación |
 |---|---|---|
-| Red | RDS y ETL en subredes privadas | VPC sin IP pública; RDS sólo acepta PostgreSQL desde el security group ETL |
+| Red | RDS y ETL en subredes privadas | Sin ruta a Internet; ETL sólo sale a RDS y a endpoints privados de S3, Secrets Manager y CloudWatch |
 | Transporte | TLS en todos los enlaces | Política S3 deniega solicitudes sin `aws:SecureTransport`; SAP OData y Power BI usan HTTPS/TLS |
 | Datos en reposo | Clave KMS administrada por el proyecto | Rotación habilitada; S3 usa SSE-KMS y RDS puede usar la misma CMK |
 | Secretos | Contraseña administrada por RDS | RDS genera y guarda la credencial maestra en Secrets Manager; no se ingresa en Terraform |
@@ -48,6 +48,7 @@ usa HTTP y credenciales ficticias. Para AWS real se habilita explícitamente:
 use_localstack           = false
 create_security_baseline = true
 create_rds               = true
+create_private_endpoints = true
 alarm_actions            = ["arn:aws:sns:us-east-1:123456789012:analytics-alerts"]
 ```
 
@@ -59,10 +60,8 @@ pero no envían avisos.
 
 - Crear un usuario ETL y otro de sólo lectura para Power BI; no compartir el
   usuario maestro.
-- Restringir el egreso del security group ETL, actualmente abierto para permitir
-  el arranque del prototipo.
-- Agregar endpoints privados para S3, Secrets Manager, KMS y CloudWatch cuando se
-  cierre el diseño de conectividad.
+- Validar mediante pruebas de integración que el worker ETL accede a S3,
+  Secrets Manager, CloudWatch y RDS sin una ruta por Internet.
 - Integrar CloudTrail y retención centralizada de logs.
 - Probar restauración de RDS y recuperación de objetos S3 versionados.
 - Configurar un clúster de al menos dos gateways de Power BI.

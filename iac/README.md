@@ -7,8 +7,9 @@ y recursos con etiquetas consistentes.
 
 ## Recursos definidos
 
-- VPC y dos subredes privadas.
-- Security groups separados para ETL y PostgreSQL.
+- VPC, tabla de rutas y dos subredes privadas sin ruta a Internet.
+- Security groups separados para ETL, endpoints privados y PostgreSQL.
+- Gateway Endpoint para S3 e Interface Endpoints para Secrets Manager y CloudWatch.
 - Buckets S3 Landing y Curated con versionado, cifrado y bloqueo público.
 - Rol e instance profile IAM de mínimo privilegio.
 - Launch Template y Auto Scaling Group para workers ETL.
@@ -46,6 +47,7 @@ terraform plan \
   -var='appflow_connector_profile_name=<perfil-sap-odata>' \
   -var='appflow_sap_object_path=<entity-set-copa>' \
   -var='create_compute=true' \
+  -var='create_private_endpoints=true' \
   -var='ec2_ami_id=<ami-aprobada>' \
   -var='create_rds=true' \
   -var='create_security_baseline=true'
@@ -69,6 +71,7 @@ Profile/EntitySet, EC2 con la AMI ficticia o KMS apuntando a LocalStack.
 |---|---|
 | `providers.tf` | Versión y configuración del provider AWS/LocalStack |
 | `main.tf` | VPC, S3, IAM y RDS |
+| `networking.tf` | Rutas privadas, VPC endpoints y egress de mínimo privilegio |
 | `appflow.tf` | Flujo SAP OData hacia Landing |
 | `compute.tf` | Launch Template y Auto Scaling |
 | `security.tf` | KMS y políticas HTTPS de S3 |

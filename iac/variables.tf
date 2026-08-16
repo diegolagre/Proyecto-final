@@ -51,6 +51,17 @@ variable "create_compute" {
   default     = false
 }
 
+variable "create_private_endpoints" {
+  type        = bool
+  description = "Crea endpoints privados para S3, Secrets Manager y CloudWatch en AWS real."
+  default     = false
+
+  validation {
+    condition     = !var.create_private_endpoints || !var.use_localstack
+    error_message = "create_private_endpoints sólo puede habilitarse contra AWS real."
+  }
+}
+
 variable "ec2_ami_id" {
   type        = string
   description = "AMI para el worker ETL; debe reemplazarse al desplegar en AWS real."
