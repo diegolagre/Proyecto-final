@@ -53,9 +53,9 @@ RDS permanece en subred privada y no se expone públicamente.
 La arquitectura productiva definitiva y su comparación con la demostración
 local están documentadas en [`docs/architecture.md`](docs/architecture.md). La
 imagen actualizada para la presentación está disponible en
-[`outputs/arquitectura-sap-erp-slt-aws-consumo-v2.png`](outputs/arquitectura-sap-erp-slt-aws-consumo-v2.png).
+[`outputs/arquitectura-sap-erp-slt-aws-consumo-v3.png`](outputs/arquitectura-sap-erp-slt-aws-consumo-v3.png).
 
-![Arquitectura final: SAP ECC y SLT hacia AWS, con consumo corporativo y Power BI](outputs/arquitectura-sap-erp-slt-aws-consumo-v2.png)
+![Arquitectura final: SAP ECC y SLT hacia AWS, endpoints privados, backend Terraform y consumo seguro](outputs/arquitectura-sap-erp-slt-aws-consumo-v3.png)
 
 El escenario base de capacidad, crecimiento y escalabilidad se detalla en
 [`docs/sizing.md`](docs/sizing.md).

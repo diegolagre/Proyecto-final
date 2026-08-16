@@ -46,7 +46,7 @@ flowchart LR
 ```
 
 La imagen final de presentación se encuentra en
-[`outputs/arquitectura-sap-erp-slt-aws-consumo-v2.png`](../outputs/arquitectura-sap-erp-slt-aws-consumo-v2.png).
+[`outputs/arquitectura-sap-erp-slt-aws-consumo-v3.png`](../outputs/arquitectura-sap-erp-slt-aws-consumo-v3.png).
 El diagrama Mermaid es la versión mantenible y debe actualizarse junto con la
 infraestructura.
 
