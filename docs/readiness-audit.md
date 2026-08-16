@@ -27,11 +27,12 @@ SAP o de una cuenta AWS real.
 
 - Worktree limpio antes de iniciar la auditoría.
 - Historial con commits incrementales y rama `main` sincronizada.
-- Cinco pruebas automatizadas aprobadas.
+- Trece pruebas automatizadas aprobadas.
 - Demo integral: 13 controles aprobados y cero advertencias.
 - Terraform 1.5.7: formato correcto y configuración válida.
 - Presentación: sin overflow y sin diferencias estructurales contra el template.
-- Cálculo reconciliado: USD 700,04 en Calculator y USD 736,54 con VPN complementaria.
+- Cálculo reconciliado: USD 700,04 en Calculator y USD 780,44 con VPN y
+  PrivateLink complementarios.
 - Búsqueda de credenciales: no se encontraron tokens, access keys ni contraseñas
   productivas versionadas.
 

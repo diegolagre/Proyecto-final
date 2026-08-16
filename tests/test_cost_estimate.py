@@ -14,7 +14,7 @@ def test_documented_monthly_and_one_time_totals() -> None:
     _, monthly_total = calculate(data["monthly_items"])
     _, one_time_total = calculate(data["one_time_items"])
 
-    assert monthly_total == Decimal("736.54")
+    assert monthly_total == Decimal("780.44")
     assert one_time_total == Decimal("3.204")
 
 
@@ -26,3 +26,5 @@ def test_estimate_contains_non_obvious_costs() -> None:
     assert "Data transfer out to Power BI" in services
     assert "S3 PUT/COPY/POST/LIST" in services
     assert "CloudWatch Logs ingestion" in services
+    assert "AWS PrivateLink interface endpoint hours" in services
+    assert "AWS PrivateLink data processing" in services

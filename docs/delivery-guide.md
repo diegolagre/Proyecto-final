@@ -156,14 +156,16 @@ una transferencia formal después del hypercare. El detalle está en
 | RDS PostgreSQL Multi-AZ | USD 298,14 |
 | EC2 ETL y EBS | USD 108,48 |
 | VPN complementaria | USD 36,50 |
+| PrivateLink complementario | USD 43,90 |
 | S3, AppFlow, seguridad y monitoreo | USD 10,94 |
 | **Subtotal AWS Pricing Calculator** | **USD 700,04** |
-| **Total mensual completo** | **USD 736,54** |
-| **Total anual recurrente** | **USD 8.838,48** |
+| **Total mensual completo** | **USD 780,44** |
+| **Total anual recurrente** | **USD 9.365,28** |
 
 El renglón agrupado suma varias categorías menores. AWS Pricing Calculator no
 ofrece Site-to-Site VPN en su catálogo público, por lo que sus USD 36,50 se
-agregan con la tarifa oficial de USD 0,05 por conexión-hora. La estimación
+agregan con la tarifa oficial de USD 0,05 por conexión-hora. Los endpoints
+privados agregan USD 43,90 como suplemento posterior al PDF. La estimación
 incluye backups adicionales, solicitudes S3, KMS, secretos y logs. Los 20 GB de
 transferencia quedan cubiertos por la franquicia agregada vigente. Excluye
 impuestos, soporte, licencias SAP/Power BI, Direct Connect y horas profesionales.
@@ -180,7 +182,7 @@ python3 -m pip install -r requirements.txt
 
 El bootstrap materializa cinco servicios en LocalStack: S3, IAM, VPC/EC2,
 Secrets Manager y CloudWatch Logs. PostgreSQL representa RDS. El resultado
-esperado del control es `13 OK / 0 WARN` y cinco pruebas aprobadas.
+esperado del control es `13 OK / 0 WARN` y trece pruebas aprobadas.
 
 ## Matriz de evidencias
 

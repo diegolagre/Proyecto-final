@@ -16,6 +16,8 @@ presupuesto reproducible del repositorio fue reconciliado contra esa evidencia.
   disponible en el catálogo del Calculator público.
 - CloudWatch: seis alarmas y 5 GB de logs.
 - Una clave KMS, 20.000 solicitudes y tres secretos.
+- Tres Interface VPC Endpoints en dos AZ y 10 GB procesados, calculados como
+  suplemento porque se incorporaron después de exportar el PDF oficial.
 
 ## Evidencia requerida antes de entregar
 
@@ -32,10 +34,11 @@ presupuesto reproducible del repositorio fue reconciliado contra esa evidencia.
 | Enlace compartido | <https://calculator.aws/#/estimate?id=0ab6fdd1ac2c32ff107e872747339ad9ffbed689> |
 | Total mensual AWS Pricing Calculator | USD 700,04 |
 | VPN complementaria | USD 36,50 |
-| **Total mensual completo** | **USD 736,54** |
-| Total anual recurrente | USD 8.838,48 |
+| PrivateLink complementario | USD 43,90 |
+| **Total mensual completo** | **USD 780,44** |
+| Total anual recurrente | USD 9.365,28 |
 | Upfront informado por Calculator | USD 0,06 |
-| Total de 12 meses incluyendo upfront | USD 8.838,54 |
+| Total de 12 meses incluyendo upfront | USD 9.365,34 |
 | Diferencia frente al modelo anterior | USD 74,32 mensuales (+11,22 %) |
 
 La exportación oficial contiene EC2 ETL, dos nodos EC2 Windows para Power BI
@@ -48,3 +51,8 @@ La diferencia respecto del modelo anterior proviene principalmente de los
 precios efectivos informados por Calculator para EC2 Linux y RDS. Los valores
 oficiales se conservan aunque difieran de los precios unitarios consultados
 previamente.
+
+El ajuste de seguridad posterior agrega tres endpoints de interfaz en dos AZ:
+3 × 2 × 730 horas × USD 0,01 = USD 43,80, más 10 GB × USD 0,01 = USD 0,10.
+El Gateway Endpoint para S3 no agrega cargo. Este suplemento queda separado para
+no alterar retrospectivamente el PDF exportado el 11 de agosto de 2026.

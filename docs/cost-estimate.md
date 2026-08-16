@@ -12,16 +12,16 @@ precio deben verificarse en AWS Pricing Calculator antes de aprobar el proyecto.
 | BI connectivity | USD 282,48 |
 | Database | USD 298,14 |
 | Compute | USD 108,48 |
-| Network | USD 36,50 |
+| Network | USD 80,40 |
 | Monitoring | USD 3,12 |
 | Storage | USD 4,69 |
 | Security | USD 2,36 |
 | Ingestion | USD 0,77 |
 | **Subtotal AWS Pricing Calculator** | **USD 700,04** |
-| **Total mensual con VPN complementaria** | **USD 736,54** |
-| **Total anual recurrente** | **USD 8.838,48** |
+| **Total mensual con VPN y PrivateLink complementarios** | **USD 780,44** |
+| **Total anual recurrente** | **USD 9.365,28** |
 
-El 78,8 % del total corresponde al clúster de Power BI Gateway y a RDS
+El 74,4 % del total corresponde al clúster de Power BI Gateway y a RDS
 Multi-AZ. Separarlos permite discutir disponibilidad y ubicación del gateway
 sin distorsionar el costo del data lake o de AppFlow.
 
@@ -37,6 +37,8 @@ sin distorsionar el costo del data lake o de AppFlow.
 - Una conexión Site-to-Site VPN. Los 20 GB de transferencia saliente se mantienen
   documentados, sin cargo mientras resulten cubiertos por la franquicia agregada vigente.
 - Una clave KMS, tres secretos, seis alarmas y 5 GB de logs.
+- Tres Interface VPC Endpoints en dos AZ durante 730 horas y 10 GB mensuales
+  procesados. El Gateway Endpoint de S3 no tiene cargo adicional.
 
 El archivo [`costs/aws-us-east-1.json`](../costs/aws-us-east-1.json) contiene
 cada cantidad y precio unitario. El total puede recalcularse con:
@@ -56,6 +58,8 @@ python3 scripts/calculate_monthly_cost.py
 | S3 y solicitudes | almacenamiento + PUT/GET | USD 4,69 |
 | AppFlow | 730 ejecuciones + 2 GB | USD 0,77 |
 | VPN | 730 h × USD 0,05 | USD 36,50 |
+| PrivateLink — 3 endpoints en 2 AZ | 3 × 2 × 730 h × USD 0,01 | USD 43,80 |
+| PrivateLink — datos procesados | 10 GB × USD 0,01 | USD 0,10 |
 | Transferencia saliente | 20 GB bajo franquicia agregada vigente | USD 0,00 |
 | KMS y Secrets Manager | clave, solicitudes y 3 secretos | USD 2,36 |
 | CloudWatch | 6 alarmas + 5 GB de logs | USD 3,12 |
@@ -76,8 +80,8 @@ la primera fase utiliza VPN.
 
 | Escenario | Cambio | Estimación mensual |
 |---|---|---:|
-| Productivo base | Arquitectura completa y gateways en AWS | USD 736,54 |
-| Gateway corporativo existente | Los dos nodos se operan on-premise | USD 454,06 |
+| Productivo base | Arquitectura completa, endpoints privados y gateways en AWS | USD 780,44 |
+| Gateway corporativo existente | Los dos nodos se operan on-premise | USD 497,96 |
 | ETL programado | Worker activo unas 4 horas diarias en vez de 24/7 | requiere recalcular en Calculator |
 | Desarrollo | Single-AZ, tamaños menores y recursos apagables | debe calcularse por horas de uso |
 
@@ -116,6 +120,8 @@ es costo cero para el negocio, sino costo fuera de AWS.
 - [Precios de Amazon S3](https://aws.amazon.com/s3/pricing/)
 - [Precios de Amazon AppFlow](https://aws.amazon.com/appflow/pricing/)
 - [Precios de AWS Site-to-Site VPN](https://aws.amazon.com/vpn/pricing/)
+- [Precios de AWS PrivateLink](https://aws.amazon.com/privatelink/pricing/)
+- [Gateway endpoints de Amazon VPC](https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html)
 - [Precios de AWS KMS](https://aws.amazon.com/kms/pricing/)
 - [Precios de AWS Secrets Manager](https://aws.amazon.com/secrets-manager/pricing/)
 - [Precios de Amazon CloudWatch](https://aws.amazon.com/cloudwatch/pricing/)

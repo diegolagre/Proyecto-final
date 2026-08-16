@@ -105,7 +105,7 @@ La reversa reactiva el consumo anterior y conserva Landing y RDS para diagnósti
 
 Explicar las alternativas:
 
-- gateway corporativo existente: costo AWS aproximado de USD 454,06;
+- gateway corporativo existente: costo AWS aproximado de USD 497,96;
 - ETL programado: ahorro frente a mantener el worker encendido permanentemente;
 - reserva RDS: evaluar sólo después de medir carga real;
 - lifecycle S3: archivar Landing y versiones antiguas.
@@ -117,7 +117,7 @@ El costo excluye impuestos, soporte, licencias, Direct Connect y mano de obra.
 **Tiempo:** 60 segundos más la demo.
 
 > La entrega materializa cinco servicios AWS en LocalStack, ejecuta trece
-> controles sin advertencias, aprueba cinco pruebas y valida Terraform 1.5.7. El
+> controles sin advertencias, aprueba trece pruebas y valida Terraform 1.5.7. El
 > próximo paso real no es copiar datos productivos: es confirmar el EntitySet
 > OData de CO-PA con el equipo SAP.
 
@@ -184,11 +184,12 @@ No completamente. Demuestra APIs, configuración y reproducibilidad. La
 aplicación efectiva de políticas, KMS, Multi-AZ, VPN y rendimiento se valida en
 una cuenta AWS de prueba antes de producción.
 
-### ¿Los USD 736,54 son una cotización?
+### ¿Los USD 780,44 son una cotización?
 
 No. Son una estimación On-Demand reproducible con precios y cantidades
-versionados. Fue recreada en AWS Pricing Calculator y debe revisarse nuevamente al aprobar el proyecto y
-revisarse después de la prueba de volumen.
+versionados. AWS Pricing Calculator informa USD 700,04 y la conciliación agrega
+USD 36,50 de VPN y USD 43,90 de PrivateLink. Debe revisarse al aprobar el
+proyecto y después de la prueba de volumen.
 
 ### ¿Qué dato falta confirmar?
 

@@ -135,12 +135,12 @@ def build():
         "Procesar carga inicial y deltas sin perdidas ni duplicados y conciliar diferencias menores o iguales a 0,1 %.",
         "Mantener RDS privado y habilitar usuarios internos por VPN y Power BI mediante gateway TLS.",
         "Estabilizar durante cinco dias habiles sin incidentes criticos abiertos.",
-        "Mantener el escenario base alrededor de USD 736,54 mensuales antes de descuentos e impuestos.",
+        "Mantener el escenario base alrededor de USD 780,44 mensuales antes de descuentos e impuestos.",
     ])
     story += [p("Resultado demostrable", "Section"), p(
         "Un unico recorrido crea cinco servicios AWS en LocalStack, procesa 1.000 registros "
         "iniciales y 50 incrementales, carga PostgreSQL y termina con 13 controles OK, cero "
-        "advertencias y cinco pruebas automatizadas aprobadas."
+        "advertencias y trece pruebas automatizadas aprobadas."
     ), PageBreak()]
 
     # Hoja 2
@@ -205,13 +205,14 @@ def build():
         ["RDS PostgreSQL Multi-AZ", "USD 298,14"],
         ["EC2 ETL y EBS", "USD 108,48"],
         ["VPN fuera del Calculator", "USD 36,50"],
+        ["PrivateLink complementario", "USD 43,90"],
         ["S3, AppFlow, seguridad y monitoreo", "USD 10,94"],
-        ["Total mensual / anual", "USD 736,54 / USD 8.838,48"],
+        ["Total mensual / anual", "USD 780,44 / USD 9.365,28"],
     ]
     story += [p("Estimacion productiva", "Section"), table(costs, [115 * mm, 59 * mm])]
     story += [p(
-        "Calculator informa USD 700,04. La VPN no aparece en su catalogo publico y agrega "
-        "USD 36,50 con la tarifa oficial. Incluye backups, solicitudes S3, KMS, secretos y logs.", "Callout"
+        "Calculator informa USD 700,04. La VPN agrega USD 36,50 y los VPC endpoints "
+        "privados USD 43,90 como suplementos trazables. S3 Gateway Endpoint no tiene cargo.", "Callout"
     ), PageBreak()]
 
     # Hoja 4

@@ -1,7 +1,7 @@
 {
   "currency": "USD",
   "region": "us-east-1",
-  "price_reference_date": "2026-08-11",
+  "price_reference_date": "2026-08-16",
   "scenario": "production-base",
   "monthly_items": [
     {
@@ -99,6 +99,22 @@
       "unit": "connection-hour",
       "unit_price": 0.05,
       "assumption": "One VPN connection with two tunnels"
+    },
+    {
+      "category": "Network",
+      "service": "AWS PrivateLink interface endpoint hours",
+      "quantity": 4380,
+      "unit": "endpoint-AZ-hour",
+      "unit_price": 0.01,
+      "assumption": "Secrets Manager, CloudWatch Logs and CloudWatch Monitoring endpoints in two Availability Zones for 730 hours"
+    },
+    {
+      "category": "Network",
+      "service": "AWS PrivateLink data processing",
+      "quantity": 10,
+      "unit": "GB",
+      "unit_price": 0.01,
+      "assumption": "Estimated monthly traffic through the three interface endpoints"
     },
     {
       "category": "Network",
