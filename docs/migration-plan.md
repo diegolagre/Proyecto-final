@@ -9,7 +9,7 @@ permanece on-premise y SAP BW no participa del flujo.
 
 | Objetivo | Indicador de éxito | Fecha objetivo |
 |---|---|---|
-| Construir la infraestructura analítica reproducible | VPC, IAM, S3, AppFlow, EC2 Auto Scaling y RDS definidos en Terraform y validados sin errores | Fin de semana 3 |
+| Construir la infraestructura analítica reproducible | Backend remoto, VPC endpoints, IAM, S3, AppFlow, EC2 Auto Scaling y RDS desplegados y probados por servicio | Fin de semana 4 |
 | Validar la ingesta sin datos confidenciales | Carga sintética inicial e incremental completa, idempotente y con 100 % de los controles automáticos aprobados | Fin de semana 5 |
 | Demostrar capacidad para el volumen CO-PA | Prueba con al menos 4,5 millones de filas y proyección documentada a 45 millones; sin pérdida ni duplicados | Fin de semana 6 |
 | Preparar el consumo analítico | Consultas de conciliación y vista de lectura para BI con tiempo p95 menor a 10 segundos en el conjunto de prueba | Fin de semana 7 |
@@ -25,31 +25,68 @@ gantt
   axisFormat %d/%m
 
   section Preparación
-  Alcance, responsables y accesos          :a1, 2026-09-01, 5d
-  Línea base de seguridad y conectividad   :a2, after a1, 5d
+  Alcance, responsables y accesos                 :a1, 2026-09-01, 4d
+  Prerrequisitos SAP, certificados y firewall     :a2, 2026-09-03, 5d
+  Diseño de seguridad y conectividad               :a3, after a1, 3d
 
-  section Construcción
-  Infraestructura AWS con Terraform        :b1, 2026-09-08, 10d
-  Configuración SLT, ODP/OData y AppFlow    :b2, 2026-09-15, 10d
+  section Fundación AWS
+  Backend remoto S3 y locking DynamoDB             :b1, 2026-09-08, 2d
+  VPC, subredes y tabla de rutas                    :b2, after b1, 3d
+  VPC endpoints y reglas de egress                  :b3, after b2, 3d
+  IAM, KMS y Secrets Manager                        :b4, 2026-09-14, 3d
+  S3 Landing y Curated                              :b5, 2026-09-17, 2d
+  RDS PostgreSQL privado                            :b6, 2026-09-17, 3d
+  EC2, EBS, Launch Template y Auto Scaling          :b7, 2026-09-21, 3d
+  CloudWatch, alarmas y prueba de notificación      :b8, 2026-09-24, 2d
+
+  section Integración
+  Publicación SLT y ODP/OData                       :c1, 2026-09-08, 8d
+  Connector Profile y AppFlow                       :c2, 2026-09-21, 3d
+  Prueba técnica extremo a extremo                  :c3, 2026-09-24, 4d
 
   section Pruebas
-  Carga sintética funcional                :c1, 2026-09-22, 5d
-  Volumen, rendimiento y recuperación      :c2, after c1, 10d
-  Validación BI y aceptación del usuario   :c3, 2026-10-06, 5d
+  Carga sintética e idempotencia                     :d1, 2026-09-29, 4d
+  Volumen y rendimiento                               :d2, 2026-10-05, 5d
+  Backup, restauración y seguridad                    :d3, 2026-10-05, 4d
+  Gateway, BI y aceptación del usuario                :d4, 2026-10-09, 5d
 
   section Corte
-  Ensayo de corte y reversa                 :d1, 2026-10-13, 5d
-  Carga inicial y delta final               :crit, d2, 2026-10-20, 3d
-  Conciliación y habilitación de consumo    :crit, d3, after d2, 2d
+  Ensayo de corte y reversa                          :e1, 2026-10-15, 4d
+  Contingencia y correcciones                        :e2, after e1, 3d
+  Carga inicial y delta final                        :crit, e3, 2026-10-26, 3d
+  Conciliación y habilitación de consumo             :crit, e4, after e3, 2d
 
   section Estabilización
-  Hypercare y transferencia operativa       :e1, 2026-10-27, 10d
-  Cierre y aprobación                       :milestone, e2, 2026-11-09, 0d
+  Hypercare y transferencia operativa                :f1, 2026-10-30, 7d
+  Cierre y aprobación                                 :milestone, f2, 2026-11-09, 0d
 ```
 
-Las actividades de infraestructura y SAP pueden solaparse porque tienen
-responsables diferentes. La carga productiva sólo comienza cuando seguridad,
-conectividad, prueba de volumen y ensayo de reversa están aprobados.
+Las barras incluyen aprovisionamiento, configuración, prueba técnica y margen de
+corrección; no representan solamente el tiempo de ejecución de `terraform apply`.
+Las actividades de infraestructura y SAP se solapan cuando tienen responsables
+diferentes, pero AppFlow no se prueba hasta disponer de OData, red y buckets. La
+carga productiva sólo comienza cuando seguridad, conectividad, volumen y reversa
+están aprobados. Direct Connect no integra este camino crítico: la fase inicial
+usa VPN y Direct Connect queda como evolución sujeta a contratación externa.
+
+## Despliegue y prueba por componente
+
+| Componente | Despliegue y configuración | Prueba y estabilización | Dependencia / criterio de salida |
+|---|---:|---:|---|
+| Backend Terraform | 1 día | 1 día | Estado remoto cifrado, versionado y lock concurrente verificado |
+| VPC y subredes | 2 días | 1 día | CIDR aprobado, rutas privadas y resolución DNS verificadas |
+| VPC endpoints y SG | 1 día | 2 días | ETL llega a S3, Secrets Manager y CloudWatch sin egress abierto |
+| IAM, KMS y secretos | 2 días | 1 día | Mínimo privilegio, cifrado y lectura autorizada probados |
+| S3 Landing/Curated | 1 día | 1 día | TLS, bloqueo público, cifrado, versionado e idempotencia aprobados |
+| RDS PostgreSQL | 2 días | 2 días | Acceso privado, backup, restauración y conciliación aprobados |
+| EC2/EBS/Auto Scaling | 2 días | 2 días | Instance Refresh, escalado y reemplazo de worker verificados |
+| SLT/ODP/OData y AppFlow | 6 días | 5 días | Histórico y delta técnico sin pérdida ni duplicados |
+| CloudWatch | 1 día | 1 día | Métricas, alarmas y canal de notificación probados |
+| Power BI Gateway | 2 días | 2 días | Alta disponibilidad, TLS, usuario de lectura y refresh validados |
+
+Los tiempos son días hábiles estimados y algunas tareas se ejecutan en paralelo.
+Una actividad no se marca como terminada al crear el recurso: debe cumplir su
+criterio de salida y reservar tiempo para corregir fallas encontradas.
 
 ## Etapas, entregables y responsables
 
