@@ -18,15 +18,26 @@ flowchart LR
   HYBRID["VPN Site-to-Site<br/>Direct Connect como evolución"]
 
   subgraph AWS[AWS Cloud]
-    APPFLOW["Amazon AppFlow"] --> LANDING["S3 Landing"] --> ETL
+    APPFLOW["Amazon AppFlow"] --> LANDING["S3 Landing"]
     subgraph VPC[VPC]
       subgraph PRIVATE[Subred privada]
         ETL["EC2 Auto Scaling<br/>Integración y ETL"]
         RDS["Amazon RDS PostgreSQL<br/>Data Warehouse"]
         GW["Power BI Gateway"]
+        S3EP["S3 Gateway Endpoint"]
+        IFEP["Interface Endpoints<br/>Secrets Manager / CloudWatch"]
       end
     end
-    ETL --> CURATED["S3 Curated"] --> RDS
+    LANDING <--> S3EP <--> ETL
+    ETL --> IFEP
+    ETL -->|PostgreSQL 5432| RDS
+    ETL --> S3EP <--> CURATED["S3 Curated"]
+    CURATED --> RDS
+
+    subgraph IAC[Plano de administración IaC]
+      TF["Terraform"] --> STATE["S3 State<br/>cifrado y versionado"]
+      TF --> LOCK["DynamoDB Lock"]
+    end
   end
 
   SLT -->|ODP / OData| HYBRID --> APPFLOW
@@ -47,6 +58,7 @@ infraestructura.
 | Replicación | SAP SLT · DMIS 2018 | Publica la tabla mediante ODP y delta queue |
 | Exposición | SAP Gateway · OData | EntitySet consumible mediante HTTPS |
 | Conectividad | VPN Site-to-Site | Primera fase; Direct Connect queda como evolución |
+| Acceso privado AWS | VPC endpoints | S3 mediante Gateway Endpoint; secretos y observabilidad mediante PrivateLink |
 | Ingesta | Amazon AppFlow | Carga inicial e incremental hacia S3 Landing |
 | Almacenamiento | Amazon S3 Landing y Curated | Originales y datos procesados en zonas separadas |
 | Procesamiento | EC2 Auto Scaling | Workers ETL privados, reemplazables y escalables |
@@ -71,6 +83,8 @@ acceso público a RDS, Airbyte y exposición del SAP Gateway a Internet.
 | Amazon RDS PostgreSQL | Contenedor PostgreSQL |
 | VPN / Direct Connect | Límite lógico documentado |
 | Power BI Gateway | Componente lógico documentado |
+| VPC endpoints | Límite lógico; el cómputo local usa endpoints de LocalStack |
+| Backend remoto | Estado local ignorado por Git; bootstrap productivo no se ejecuta en la demo |
 
 Los archivos `copa_initial.csv` y `copa_delta_001.csv` son sintéticos y
 reproducibles. No contienen nombres, identificadores, importes ni estructuras
@@ -105,6 +119,10 @@ extraídas de la tabla CE1 productiva. Los 45 millones de registros se utilizan
 - Los usuarios corporativos acceden por VPN o Direct Connect.
 - Power BI Service accede mediante Power BI Gateway y TLS.
 - Las credenciales de base se almacenan y rotan con Secrets Manager en AWS.
+- El SG del ETL no permite `0.0.0.0/0`: sólo habilita PostgreSQL hacia RDS y
+  HTTPS hacia los endpoints privados autorizados.
+- El estado Terraform productivo se mantiene fuera del repositorio en S3, con
+  versionado, cifrado y locking mediante DynamoDB.
 
 ## Flujo de datos
 
@@ -113,6 +131,10 @@ extraídas de la tabla CE1 productiva. Los 45 millones de registros se utilizan
 3. Workers EC2 en Auto Scaling validan, transforman y escriben los datos en S3 Curated.
 4. El ETL actualiza el modelo dimensional en RDS PostgreSQL.
 5. Usuarios internos consultan por red privada y Power BI utiliza el gateway.
+
+El tráfico del worker hacia S3, Secrets Manager y CloudWatch permanece dentro
+de la red de AWS mediante VPC endpoints. No se crea Internet Gateway ni NAT
+Gateway para las subredes privadas del ETL.
 
 ## Diferencia entre demostración y producción
 
